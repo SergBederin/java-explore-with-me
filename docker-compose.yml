@@ -26,8 +26,6 @@ services:
       container_name: db_ewm_container
       ports:
         - "6545:5434"
-      depends_on:
-        - stats-server
       environment:
         - POSTGRES_DB=mainDb
         - POSTGRES_USER=root

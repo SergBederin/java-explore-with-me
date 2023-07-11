@@ -45,13 +45,9 @@ public class StatsService {
 
         if (uri != null && !uri.isEmpty()) {
             if (unique) {
-                for (String u : uri) {
-                    listResponseStat.addAll(repository.findStatUriUnique(timeStart, timeEnd, u));
-                }
+                listResponseStat.addAll(repository.findStatUriUnique(timeStart, timeEnd, uri));
             } else {
-                for (String u : uri) {
-                    listResponseStat.addAll(repository.findStatUri(timeStart, timeEnd, u));
-                }
+                listResponseStat.addAll(repository.findStatUri(timeStart, timeEnd, uri));
             }
         } else {
             if (unique) {
