@@ -29,7 +29,6 @@ public class StatsService {
         repository.save(state);
     }
 
-    //public List<ResponseDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
     public List<ResponseDto> getStats(String start, String end, List<String> uris, boolean unique) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime timeStart = LocalDateTime.parse(start, formatter);
