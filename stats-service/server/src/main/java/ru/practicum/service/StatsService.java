@@ -38,7 +38,7 @@ public class StatsService {
             throw new ValidationException("Неправильно указано время для поиска!");
         }
 
-        if (uris == null && uris.isEmpty()) {
+        if (uris == null || uris.isEmpty()) {
             if (unique) {
                 return repository.findStatUnique(timeStart, timeEnd);
             } else {
