@@ -12,6 +12,7 @@ import ru.practicum.service.StatsService;
 import javax.validation.Valid;
 import java.util.List;
 
+
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -30,7 +31,9 @@ public class StatsController {
                                       @RequestParam(name = "end") String end,
                                       @RequestParam(name = "uris", required = false) List<String> uris,
                                       @RequestParam(name = "unique", defaultValue = "false") boolean unique) {
+
         log.info("Выполняется запрос GET/stats для получения статистики для эндпоинтов {}", uris);
         return statsService.getStats(start, end, uris, unique);
     }
 }
+
