@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.dto.RequestDto;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -29,7 +30,8 @@ public class StatsClient extends BaseClient {
 
     public ResponseEntity<Object> patchStats(String start,
                                              String end,
-                                             String[] uris,
+                                             //String[] uris,
+                                             List<String> uris,
                                              boolean unique) {
         Map<String, Object> parameters = Map.of(
                 "start", start,
