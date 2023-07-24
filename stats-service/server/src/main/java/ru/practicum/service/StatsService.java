@@ -31,9 +31,9 @@ public class StatsService {
     }
 
     public List<ResponseDto> getStats(String start, String end, List<String> uris, boolean unique) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime timeStart = LocalDateTime.parse(start, formatter);
-        LocalDateTime timeEnd = LocalDateTime.parse(end, formatter);
+        // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime timeStart = LocalDateTime.parse(start, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime timeEnd = LocalDateTime.parse(end, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         if (timeStart.isAfter(timeEnd)) {
             throw new ValidationException("Неправильно указано время для поиска!");
         }
