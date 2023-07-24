@@ -19,6 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @Slf4j
 public class StatsService {
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     @Autowired
     private StatsRepository repository;
 
@@ -33,7 +34,6 @@ public class StatsService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime timeStart = LocalDateTime.parse(start, formatter);
         LocalDateTime timeEnd = LocalDateTime.parse(end, formatter);
-
         if (timeStart.isAfter(timeEnd)) {
             throw new ValidationException("Неправильно указано время для поиска!");
         }
