@@ -12,10 +12,10 @@ import ru.practicum.service.StatsService;
 import javax.validation.Valid;
 import java.util.List;
 
-
 @RestController
 @Slf4j
 @RequiredArgsConstructor
+
 public class StatsController {
     private final StatsService statsService;
 

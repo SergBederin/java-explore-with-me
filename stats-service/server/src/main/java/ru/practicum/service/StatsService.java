@@ -19,7 +19,6 @@ import java.util.List;
 @NoArgsConstructor
 @Slf4j
 public class StatsService {
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     @Autowired
     private StatsRepository repository;
 
@@ -31,26 +30,26 @@ public class StatsService {
     }
 
     public List<ResponseDto> getStats(String start, String end, List<String> uris, boolean unique) {
-        // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime timeStart = LocalDateTime.parse(start, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        LocalDateTime timeEnd = LocalDateTime.parse(end, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime timeStart = LocalDateTime.parse(start, formatter);
+        LocalDateTime timeEnd = LocalDateTime.parse(end, formatter);
         if (timeStart.isAfter(timeEnd)) {
             throw new ValidationException("Неправильно указано время для поиска!");
         }
 
-        if (uris == null || uris.isEmpty()) {
-            if (unique) {
-                return repository.findStatUnique(timeStart, timeEnd);
-            } else {
-                return repository.findStat(timeStart, timeEnd);
-            }
-
-        } else {
+        if (uris != null && !uris.isEmpty()) {
             if (unique) {
                 return repository.findStatUriUnique(timeStart, timeEnd, uris);
             } else {
                 return repository.findStatUri(timeStart, timeEnd, uris);
             }
+        } else {
+            if (unique) {
+                return repository.findStatUnique(timeStart, timeEnd);
+            } else {
+                return repository.findStat(timeStart, timeEnd);
+            }
         }
     }
 }
+
