@@ -22,14 +22,14 @@ public class StatsService {
     @Autowired
     private StatsRepository repository;
 
-    public void saveHit(RequestDto requestDto) {
+    public void hit(RequestDto requestDto) {
         Stats state = StatsMapper.mapToStat(requestDto);
         state.setTimestamp(LocalDateTime.now());
         log.info("Добавлена запись статистики = {}", requestDto);
         repository.save(state);
     }
 
-    public List<ResponseDto> getStats(String start, String end, List<String> uris, boolean unique) {
+    public List<ResponseDto> stats(String start, String end, List<String> uris, boolean unique) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime timeStart = LocalDateTime.parse(start, formatter);
         LocalDateTime timeEnd = LocalDateTime.parse(end, formatter);

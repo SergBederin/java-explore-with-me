@@ -144,7 +144,7 @@ public class AdminEventsService {
             event.setTitle(updateEventAdminRequest.getTitle());
         }
 
-        log.debug("Выполнено редактирование данных события и его статуса по id: {}.", eventId);
+        log.info("Выполнено редактирование данных события и его статуса по id: {}.", eventId);
         return mapToEventFullDto(repository.save(event));
     }
 }

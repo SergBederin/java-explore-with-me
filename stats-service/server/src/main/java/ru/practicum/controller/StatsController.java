@@ -22,7 +22,7 @@ public class StatsController {
     @PostMapping("/hit")
     public ResponseEntity<String> postHit(@Valid @RequestBody RequestDto requestDto) {
         log.info("Выполняется запрос Post/hit для добавления эндпоинта {}", requestDto);
-        statsService.saveHit(requestDto);
+        statsService.hit(requestDto);
         return new ResponseEntity<>("Информация сохранена", HttpStatus.CREATED);
     }
 
@@ -33,7 +33,7 @@ public class StatsController {
                                       @RequestParam(name = "unique", defaultValue = "false") boolean unique) {
 
         log.info("Выполняется запрос GET/stats для получения статистики для эндпоинтов {}", uris);
-        return statsService.getStats(start, end, uris, unique);
+        return statsService.stats(start, end, uris, unique);
     }
 }
 
