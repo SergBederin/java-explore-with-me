@@ -25,9 +25,9 @@ services:
       image: postgres:14-alpine
       container_name: db_ewm_container
       ports:
-        - "6545:5434"
+        - "6545:5432"
       environment:
-        - POSTGRES_DB=mainDb
+        - POSTGRES_DB=main
         - POSTGRES_USER=root
         - POSTGRES_PASSWORD=root
 
@@ -40,6 +40,6 @@ services:
         depends_on:
           - ewm-db
         environment:
-          - MAIN_STRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5434/mainDb
+          - MAIN_STRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/main
           - MAIN_POSTGRES_USER=root
           - MAIN_POSTGRES_PASSWORD=root
