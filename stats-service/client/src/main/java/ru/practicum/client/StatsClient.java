@@ -22,7 +22,7 @@ public class StatsClient extends BaseClient {
     @Value("${main-app.name}")
     private String appMain;
 
-    @Autowired
+  /*  @Autowired
     public StatsClient(RestTemplateBuilder builder) {
         super(
                 builder
@@ -53,5 +53,42 @@ public class StatsClient extends BaseClient {
         );
 
         return get(serverUrl + "/stats?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
+    }*/
+   // private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    @Autowired
+    public StatsClient(@Value("${stats-server.url}") String serverUrl, RestTemplateBuilder builder) {
+        super(
+                builder
+                        .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))
+                        .requestFactory(HttpComponentsClientHttpRequestFactory::new)
+                        .build()
+        );
+    }
+
+   /* public ResponseEntity<Object> hit(RequestDto requestDto) {
+        return post("/hit", null, null, requestDto);
+    }*/
+   public void hit(HttpServletRequest request) {
+       RequestDto requestDto = RequestDto.builder()
+               .app(appMain)
+               .uri(request.getRequestURI())
+               .ip(request.getRemoteAddr())
+               .build();
+       post("/hit", requestDto);
+   }
+
+    public ResponseEntity<Object> stats(String start,
+                                             String end,
+                                             //String[] uris,
+                                             List<String> uris,
+                                             boolean unique) {
+        Map<String, Object> parameters = Map.of(
+                "start", start,
+                "end", end,
+                "uris", uris,
+                "unique", unique
+        );
+        return patch("/stats?start={start}&end={end}&uris={uris}&unique={unique}", null, parameters, null);
     }
 }
