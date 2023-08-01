@@ -1,0 +1,62 @@
+package ru.practicum.main.messages;
+
+public enum LogMessages {
+    TRY_PUBLIC_GET_COMPILATIONS("Попытка получения подборок событий."),
+    TRY_PUBLIC_GET_COMPILATIONS_ID("Попытка получения подборок событий по id: {}."),
+    TRY_ADMIN_POST_CATEGORIES("Admin: Попытка получения категории."),
+    TRY_ADMIN_DELETE_CATEGORIES_ID("Admin: Попытка удаления категории по id: {}."),
+    TRY_ADMIN_PATCH_CATEGORIES_ID("Admin: Попытка изменения категории по id: {}."),
+    TRY_PRIVATE_GET_EVENT_USER_ID("Private: Попытка получения событий, добавленных текущим пользователем id: {}."),
+    TRY_PRIVATE_POST_EVENT_USER_ID("Private: Попытка добавления нового события."),
+    TRY_PRIVATE_GET_EVENT_USER("Private: Попытка получения полной информации о событии, добавленном текущим пользователем id: {}."),
+    TRY_PRIVATE_PATCH_EVENT_ID("Private: Попытка изменения события, добавленного текущим пользователем по id: {}."),
+    TRY_PUBLIC_GET_CATEGORIES("Public: Попытка получения категории."),
+    TRY_PUBLIC_GET_CATEGORIES_ID("Public: Попытка получения информации о категории по id: {}."),
+    TRY_ADMIN_GET_EVENT("Admin: Попытка поиска событий."),
+    TRY_ADMIN_PATCH_EVENT_ID("Admin: Попытка редактирования данных события и его статуса по id: {}."),
+    TRY_PUBLIC_GET_EVENT("Public: Попытка получения событий с возможностью фильтрации."),
+    TRY_PUBLIC_GET_EVENT_ID("Public: Попытка получения подробной информации об опубликованном событии по id: {}."),
+    TRY_PRIVATE_GET_REQUESTS_USER_ID("Private: Попытка получения информации о заявках текущего пользователя id: {} на участие в чужих событиях."),
+    TRY_PRIVATE_POST_REQUESTS_USER_ID("Private: Попытка добавления запроса от текущего пользователя id: {} на участие в событии."),
+    TRY_PRIVATE_PATCH_REQUESTS_USER_ID("Private: Попытка отмены своего запроса на участие в событии."),
+    TRY_PRIVATE_GET_REQUESTS_EVENT_ID("Private: Попытка получения информации о запросах на участие в событии текущего пользователя id: {}."),
+    TRY_PRIVATE_PATCH_REQUESTS_STATUS_EVENT_ID("Private: Попытка изменения статуса заявок на участии в событии текущего пользователя id: {}."),
+    TRY_ADMIN_GET_USERS("Admin: Попытка получения информации о пользователях."),
+    TRY_ADMIN_POST_USERS("Admin: Попытка добавления нового пользователя."),
+    TRY_ADMIN_DELETE_USERS("Admin: Попытка удаления пользователя по id: {}."),
+    TRY_ADMIN_POST_COMPILATIONS("Admin: Попытка добавления новой подборки."),
+    TRY_ADMIN_DELETE_COMPILATIONS_ID("Admin: Попытка удаления подборки по id: {}."),
+    TRY_ADMIN_PATCH_COMPILATIONS_ID("Admin: Попытка обновления информации о подборке по id: {}."),
+    PUBLIC_GET_COMPILATIONS("Успешное получение подборок событий."),
+    PUBLIC_GET_COMPILATIONS_ID("Успешное получение подборок событий по id: {}."),
+    ADMIN_POST_CATEGORIES("Admin: Успешное получение категории."),
+    ADMIN_DELETE_CATEGORIES_ID("Admin: Успешное удаление категории по id: {}."),
+    ADMIN_PATCH_CATEGORIES_ID("Admin: Успешное изменение категории по id: {}."),
+    PRIVATE_GET_EVENT_USER_ID("Private: Успешное получение событий, добавленных текущим пользователем id: {}."),
+    PRIVATE_POST_EVENT_USER_ID("Private: Успешное добавление нового события."),
+    PRIVATE_GET_EVENT_USER("Private: Успешное получение полной информации о событии, добавленном текущим пользователем id: {}."),
+    PRIVATE_PATCH_EVENT_ID("Private: Успешное изменение события, добавленного текущим пользователем по id: {}."),
+    PUBLIC_GET_CATEGORIES("Public: Успешное получение категории."),
+    PUBLIC_GET_CATEGORIES_ID("Public: Успешное получение информации о категории по id: {}."),
+    ADMIN_GET_EVENT("Admin: Успешный поиск событий."),
+    ADMIN_PATCH_EVENT_ID("Admin: Успешное редактирование данных события и его статуса по id: {}."),
+    PUBLIC_GET_EVENT("Public: Успешное получение событий с возможностью фильтрации."),
+    PUBLIC_GET_EVENT_ID("Public: Успешное получение подробной информации об опубликованном событии по id: {}."),
+    PRIVATE_GET_REQUESTS_USER_ID("Private: Успешное получение информации о заявках текущего пользователя id: {} на участие в чужих событиях."),
+    PRIVATE_POST_REQUESTS_USER_ID("Private: Успешное добавление запроса от текущего пользователя id: {} на участие в событии."),
+    PRIVATE_PATCH_REQUESTS_USER_ID("Private: Успешное отмена своего запроса на участие в событии."),
+    PRIVATE_GET_REQUESTS_EVENT_ID("Private: Успешное получение информации о запросах на участие в событии текущего пользователя id: {}."),
+    PRIVATE_PATCH_REQUESTS_STATUS_EVENT_ID("Private: Успешное изменение статуса заявок на участии в событии текущего пользователя id: {}."),
+    ADMIN_GET_USERS("Admin: Успешное получение информации о пользователях."),
+    ADMIN_POST_USERS("Admin: Успешное добавление нового пользователя."),
+    ADMIN_DELETE_USERS("Admin: Успешное удаление пользователя по id: {}."),
+    ADMIN_POST_COMPILATIONS("Admin: Успешное добавление новой подборки."),
+    ADMIN_DELETE_COMPILATIONS_ID("Admin: Успешное удаление подборки по id: {}."),
+    ADMIN_PATCH_COMPILATIONS_ID("Admin: Успешное обновление информации о подборке по id: {}.");
+
+    public final String label;
+
+    LogMessages(String label) {
+        this.label = label;
+    }
+}
