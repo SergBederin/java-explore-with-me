@@ -6,9 +6,6 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-/**
- * Заявка на участие в событии (сущность)
- */
 @Entity
 @Table(name = "participation_requests", schema = "public")
 @Getter
@@ -16,15 +13,14 @@ import java.time.LocalDateTime;
 public class ParticipationRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id; //id заявки
+    private int id;
     @Column(name = "created")
-    private LocalDateTime created; //Дата и время создания заявки
-    @ManyToOne(fetch = FetchType.LAZY)
+    private LocalDateTime created;
     @JoinColumn(name = "event")
-    private Event event; //Идентификатор события
+    private Event event;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "requester")
-    private User requester; //Идентификатор пользователя, отправившего заявку
+    private User requester;
     @Enumerated(EnumType.STRING)
-    private RequestStatus status = RequestStatus.PENDING; //статус заявки
+    private RequestStatus status = RequestStatus.PENDING;
 }

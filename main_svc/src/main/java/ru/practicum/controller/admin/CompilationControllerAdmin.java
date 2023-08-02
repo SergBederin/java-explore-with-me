@@ -27,7 +27,7 @@ public class CompilationControllerAdmin {
     @ResponseStatus(HttpStatus.CREATED)
     public CompilationDto postCompilation(@Valid @RequestBody NewCompilationDto newCompilationDto) {
         CompilationDto compilationDto = compilationService.create(newCompilationDto);
-        log.info("Создана подборка событий id={}, title={}", compilationDto.getId(), compilationDto.getTitle());
+        log.info("Выполняется запрос Post/admin/compilations для создания подборки событий id={}, title={}", compilationDto.getId(), compilationDto.getTitle());
         return compilationDto;
     }
 
@@ -35,7 +35,7 @@ public class CompilationControllerAdmin {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCompilation(@PathVariable(name = "compId") int compId) {
         compilationService.deleteById(compId);
-        log.info("Удалена подборка с id ={}", compId);
+        log.info("Выполняется запрос Delete/admin/compilations/{compId} для удаления подборки с id ={}", compId);
     }
 
     @PatchMapping("/{compId}")
@@ -43,7 +43,7 @@ public class CompilationControllerAdmin {
     public CompilationDto patchCompilation(@PathVariable(name = "compId") int compId,
                                            @Valid @RequestBody UpdateCompilationRequest updateRequest) {
         CompilationDto compilationDto = compilationService.update(compId, updateRequest);
-        log.info("Обновлена подборка с id ={}", compId);
+        log.info("Выполняется запрос Patch/admin/compilations/{compId} для обновления подборки с id ={}", compId);
         return compilationDto;
     }
 }

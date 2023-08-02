@@ -10,15 +10,15 @@ import javax.validation.constraints.NotBlank;
 @Setter
 @NoArgsConstructor
 public class EndpointHitDto {
-    private int id; // id хита
+    private int id;
     @NotBlank
-    private String app; //Идентификатор сервиса для которого записывается информация
+    private String app;
     @NotBlank
-    private String uri; //URI для которого был осуществлен запрос
+    private String uri;
     @NotBlank
-    private String ip; //IP-адрес пользователя, осуществившего запрос
+    private String ip;
     @NotBlank
-    private String timestamp; //Дата и время, когда был совершен запрос к эндпоинту yyyy-MM-dd HH:mm:ss
+    private String timestamp;
 
     public EndpointHitDto(String app, String uri, String ip) {
         this.app = app;

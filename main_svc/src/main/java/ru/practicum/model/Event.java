@@ -7,9 +7,6 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-/**
- * Событие (сущность)
- */
 @Entity
 @Table(name = "events", schema = "public")
 @Getter
@@ -17,52 +14,40 @@ import java.util.Objects;
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id; //id события
-
+    private int id;
     @Column(name = "annotation")
-    private String annotation; //Краткое описание
-
+    private String annotation;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category")
-    private Category category; //категория
-
+    private Category category;
     @Column(name = "confirmed_requests")
-    private int confirmedRequests; //Количество одобренных заявок на участие в данном событии
-
+    private int confirmedRequests;
     @Column(name = "created_on")
-    private LocalDateTime createdOn; //Дата и время создания события
+    private LocalDateTime createdOn;
     @Column(name = "description")
-    private String description;   //Полное описание события
-
+    private String description;
     @Column(name = "event_date")
-    private LocalDateTime eventDate;//Дата и время на которые намечено событие
-
+    private LocalDateTime eventDate;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "initiator")
-    private User initiator; //пользователь, создавший событие
-
+    private User initiator;
     @Embedded
     @AttributeOverrides({
             @AttributeOverride(name = "lat", column = @Column(name = "location_lat")),
             @AttributeOverride(name = "lon", column = @Column(name = "location_lon"))})
-    private Location location; //место проведения события
-
+    private Location location;
     @Column(name = "paid")
-    private boolean paid; //Нужно ли оплачивать участие
-
+    private boolean paid;
     @Column(name = "participant_limit")
-    private int participantLimit; //Ограничение на количество участников. Значение 0 - означает отсутствие ограничения
-
+    private int participantLimit;
     @Column(name = "published_on")
-    private LocalDateTime publishedOn; //Дата и время публикации события
-
+    private LocalDateTime publishedOn;
     @Column(name = "request_moderation")
-    private boolean requestModeration; //нужна ли пре-модерация заявок на участие
+    private boolean requestModeration;
     @Enumerated(EnumType.STRING)
-    private EventState state = EventState.PENDING;//состояние события
-
+    private EventState state = EventState.PENDING;
     @Column(name = "title")
-    private String title; //Заголовок
+    private String title;
 
     @Override
     public boolean equals(Object o) {

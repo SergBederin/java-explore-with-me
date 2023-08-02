@@ -10,9 +10,6 @@ import ru.practicum.dto.EndpointStats;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * Интерфейс репозитория, реализующий запросные методы и JPQL запросы
- */
 @Repository
 public interface StatsJpaRepository extends JpaRepository<EndpointHit, Integer>, JpaSpecificationExecutor<EndpointHit> {
     @Query("select new ru.practicum.dto.EndpointStats(hit.app, hit.uri, count(hit.ip)) " +

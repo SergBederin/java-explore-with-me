@@ -29,53 +29,31 @@ public class EventControllerPrivate {
         this.eventService = eventService;
     }
 
-    /**
-     * Создание события
-     *
-     * @param userId      - id пользователя
-     * @param newEventDto - DTO события
-     * @return - DTO созданного события
-     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED) //201
     public EventFullDto postEvent(@PathVariable(name = "userId") int userId,
                                   @Valid @RequestBody NewEventDto newEventDto) {
         EventFullDto eventDto = eventService.createEvent(newEventDto, userId);
-        log.info("Создано новое событие title={}, date={}", eventDto.getTitle(), eventDto.getEventDate());
+        log.info("Выполняется запрос Post/users/{userId}/events для создания нового события title={}, date={}", eventDto.getTitle(), eventDto.getEventDate());
         return eventDto;
     }
 
-    /**
-     * Получение событий, добавленных текущим пользователем
-     *
-     * @param userId - id пользователя
-     * @param from   - параметр пагинации - с какого элемента выводить
-     * @param size   - параметр пагинации - сколько эл-ов выводить
-     * @return - Список DTO Событий
-     */
     @GetMapping
     @ResponseStatus(HttpStatus.OK) //200
     public List<EventShortDto> getEventsByUser(@PathVariable(name = "userId") @Positive int userId,
                                                @RequestParam(name = "from", defaultValue = "0") @Positive int from,
                                                @RequestParam(name = "size", defaultValue = "10") @PositiveOrZero int size) {
         List<EventShortDto> eventShortDtos = eventService.getAllByUser(userId, from, size);
-        log.info("Получен список событий, добавленных пользователем с id={}", userId);
+        log.info("Выполняется запрос Get/users/{userId}/events для получения списка событий, добавленных пользователем с id={}", userId);
         return eventShortDtos;
     }
 
-    /**
-     * Получение события, добавленного текущим пользователем, по указанному Id
-     *
-     * @param userId  - id пользователя
-     * @param eventId - id события
-     * @return - DTO События
-     */
     @GetMapping("/{eventId}")
     @ResponseStatus(HttpStatus.OK) //200
     public EventFullDto getEventByUserAndId(@PathVariable(name = "userId") @Positive int userId,
                                             @PathVariable(name = "eventId") @Positive int eventId) {
         EventFullDto eventFullDto = eventService.getByUserAndId(userId, eventId);
-        log.info("Получено событие с Id={} , добавленное пользователем с id={}", eventId, userId);
+        log.info("Выполняется запрос Get/users/{userId}/events/{eventId} для получения событие с Id={} , добавленное пользователем с id={}", eventId, userId);
         return eventFullDto;
     }
 
@@ -85,36 +63,26 @@ public class EventControllerPrivate {
                                    @PathVariable(name = "eventId") @Positive int eventId,
                                    @Valid @RequestBody UpdateEventUserRequest updateRequest) {
         EventFullDto eventFullDto = eventService.patchEvent(userId, eventId, updateRequest);
-        log.info("Обновлено событие с Id={} , добавленное пользователем с id={}", eventId, userId);
+        log.info("Выполняется запрос Patch/users/{userId}/events/{eventId} для обновления события с Id={} , добавленное пользователем с id={}", eventId, userId);
         return eventFullDto;
     }
 
-    /**
-     * Получение инфомрации о запросах на участие в событии текущего пользователя
-     *
-     * @param userId  - id пользователя
-     * @param eventId - id события
-     * @return - DTO participationRequestDto
-     */
     @GetMapping("/{eventId}/requests")
     @ResponseStatus(HttpStatus.OK) //200
     public List<ParticipationRequestDto> getParticipationInfo(@PathVariable(name = "userId") @Positive int userId,
                                                               @PathVariable(name = "eventId") @Positive int eventId) {
         List<ParticipationRequestDto> partRequestDtoList = eventService.getParticipationInfo(userId, eventId);
-        log.info("Получена информация о запросах на учатсие в событии с Id={} , добавленное пользователем с id={}", eventId, userId);
+        log.info("Выполняется запрос Get/users/{userId}/events//{eventId}/requests для получения информации о запросах на участие в событии с Id={} , добавленное пользователем с id={}", eventId, userId);
         return partRequestDtoList;
     }
 
-    /**
-     * Изменение статуса (подтверждена, отменена) заявок на участие в событии текущего пользователя
-     */
     @PatchMapping("/{eventId}/requests")
     @ResponseStatus(HttpStatus.OK) //200
     public EventRequestStatusUpdateResult patchEventStatus(@PathVariable(name = "userId") @Positive int userId,
                                                            @PathVariable(name = "eventId") @Positive int eventId,
                                                            @RequestBody EventRequestStatusUpdateRequest statusUpdateRequest) {
         EventRequestStatusUpdateResult updateStatusResult = eventService.updateStatus(userId, eventId, statusUpdateRequest);
-        log.info("Обновлен статус события с Id={} , добавленное пользователем с id={}. Статус = {}", eventId, userId, statusUpdateRequest.getStatus().toString());
+        log.info("Выполняется запрос Patch/users/{userId}/events/{eventId}/requests для обновления статуса о событии с Id={} , добавленное пользователем с id={}. Статус = {}", eventId, userId, statusUpdateRequest.getStatus().toString());
         return updateStatusResult;
     }
 

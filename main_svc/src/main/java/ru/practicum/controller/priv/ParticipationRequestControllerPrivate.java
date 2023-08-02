@@ -27,51 +27,31 @@ public class ParticipationRequestControllerPrivate {
         this.eventService = eventService;
     }
 
-    /**
-     * Создание запроса на участие
-     *
-     * @param userId  - id пользователя
-     * @param eventId - id события
-     * @return - DTO запроса
-     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ParticipationRequestDto postParticipationRequest(@PathVariable(name = "userId") @Positive int userId,
                                                             @RequestParam(name = "eventId", required = true) @Positive int eventId) {
         EventFullDto eventFullDto = eventService.getEventById(eventId);
         ParticipationRequestDto requestDto = participationService.create(userId, eventFullDto);
-        log.info("Создан новый запрос userid={}, eventId={},requestId={}", userId, eventId, requestDto.getId());
+        log.info("Выполняется запрос Post//users/{userId}/requests для создания нового запроса userid={}, eventId={},requestId={}", userId, eventId, requestDto.getId());
         return requestDto;
     }
 
-    /**
-     * Получение информации о заявках на уастие текущего пользователя в событиях других пользователей
-     *
-     * @param userId - id пользователя
-     * @return - список заявкок
-     */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ParticipationRequestDto> getParticipationRequestsByUser(@PathVariable(name = "userId") @Positive int userId) {
 
         List<ParticipationRequestDto> requestDtos = participationService.getRequestsByUser(userId);
-        log.info("Получен список заявок пользователя с userid={} в событиях других пользователей", userId);
+        log.info("Выполняется запрос Get/users/{userId}/requests для получения списка заявок пользователя с userid={} в событиях других пользователей", userId);
         return requestDtos;
     }
 
-    /**
-     * Отмена своего запроса на участие в событии
-     *
-     * @param userId    - id пользователя
-     * @param requestId - id запроса
-     */
     @PatchMapping("/{requestId}/cancel")
     @ResponseStatus(HttpStatus.OK)
     public ParticipationRequestDto patchRequestCancel(@PathVariable(name = "userId") @Positive int userId,
                                                       @PathVariable(name = "requestId") @Positive int requestId) {
         ParticipationRequestDto participationRequestDto = participationService.patchRequestCancel(userId, requestId);
-        log.info("Отмена заявки Id={} от пользователя с userid={}", requestId, userId);
+        log.info("Выполняется запрос Patch/users/{userId}/requests/{requestId}/cancel для отмены заявки Id={} от пользователя с userid={}", requestId, userId);
         return participationRequestDto;
     }
-
 }

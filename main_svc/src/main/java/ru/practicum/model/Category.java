@@ -5,9 +5,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-/**
- * Категория (сущность)
- */
 @Entity
 @Table(name = "categories", schema = "public")
 @Getter
@@ -15,10 +12,10 @@ import javax.persistence.*;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id; // id категории
+    private int id;
 
     @Column(name = "name", unique = true)
-    private String name; //название категории
+    private String name;
 
 
 }

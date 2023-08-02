@@ -16,17 +16,10 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 public class NewCompilationDto {
-    private Set<Integer> events; //списко Id событий
-    private boolean pinned; //закреплена ли подборка на главной странице
-
+    private Set<Integer> events;
+    private boolean pinned;
     @NotNull
     @NotBlank
     @Size(min = 1, max = 50)
-    private String title; //название подборки
-
-//    public NewCompilationDto() {
-//        this.events = new HashSet<>();
-//        this.pinned = false;
-//        this.title = "";
-//    }
+    private String title;
 }

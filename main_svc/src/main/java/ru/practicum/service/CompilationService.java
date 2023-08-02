@@ -34,30 +34,15 @@ public class CompilationService {
     private final EventService eventService;
     private final UserService userService;
 
-    /**
-     * Получение подборок событий из репозитория
-     *
-     * @param pinned - параметр для фильтра подборок событий - закреплена ли подборка на гл.странице
-     * @param from   - параметр пагинации - с какого элемента выводить
-     * @param size   - параметр пагинации - сколько эл-ов выводить
-     * @return - список DTO подборок
-     */
     public List<CompilationDto> getAllComps(boolean pinned, int from, int size) {
-        PageRequest page = PageRequest.of(from / size, size, Sort.by("id").ascending()); //параметризируем переменную для пагинации
+        PageRequest page = PageRequest.of(from / size, size, Sort.by("id").ascending());
+        List<Compilation> compilations = compilationJpaRepository.findByPinned(pinned, page);
 
-        List<Compilation> compilations = compilationJpaRepository.findByPinned(pinned, page); //берем из репозитория нужные подборки
-        /*преобразование List<Compilation> в List<CompilationDto>*/
         return compilations.stream()
                 .map(CompilationMapper::toDto)
-                .collect(Collectors.toList()); //преобразуем в список DTO и возвращаем
+                .collect(Collectors.toList());
     }
 
-    /**
-     * Получение подборки событий по id
-     *
-     * @param compId - id подборки
-     * @return - DTO подборки
-     */
     public CompilationDto getCompById(int compId) {
         /*проверка параметров запроса*/
         if (compId <= 0) {
@@ -69,26 +54,20 @@ public class CompilationService {
         return CompilationMapper.toDto(compilation);
     }
 
-    /**
-     * Добавление новой подборки
-     *
-     * @param newCompilationDto - DTO подборки
-     * @return - Dto сохраненной подборки
-     */
     @Transactional
     public CompilationDto create(NewCompilationDto newCompilationDto) {
         Set<Integer> newCompilationEventIds = newCompilationDto.getEvents();
         Set<Event> eventSet;
-        if (newCompilationEventIds != null && !newCompilationEventIds.isEmpty()) { //сет событий может быть пустым
-            Set<EventFullDto> eventDtoSet = eventService.getEventsByIdSet(newCompilationDto.getEvents()); //сет DTO событий
+        if (newCompilationEventIds != null && !newCompilationEventIds.isEmpty()) {
+            Set<EventFullDto> eventDtoSet = eventService.getEventsByIdSet(newCompilationDto.getEvents());
             List<Integer> userIds = eventDtoSet.stream()
                     .map(EventFullDto::getInitiator)
                     .map(UserShortDto::getId)
                     .collect(Collectors.toList());
-            List<UserDto> usersDto = userService.getAllUsers(userIds); //получили список UserDto
+            List<UserDto> usersDto = userService.getAllUsers(userIds);
             List<User> users = usersDto.stream()
                     .map(UserMapper::toUser)
-                    .collect(Collectors.toList()); //преобразовали в список User
+                    .collect(Collectors.toList());
 
             Map<Integer, User> eventInitiatorMap = eventDtoSet.stream()
                     .collect(Collectors.toMap(
@@ -99,52 +78,39 @@ public class CompilationService {
                                         .findFirst()
                                         .get();
                             }
-                    )); //преобразование в мапу id события - User-инициатор
+                    ));
 
             eventSet = eventDtoSet.stream()
                     .map(e -> EventMapper.toEvent(e, eventInitiatorMap.get(e.getId())))
-                    .collect(Collectors.toSet()); //преобразование к сету Event
+                    .collect(Collectors.toSet());
         } else {
             eventSet = new HashSet<Event>();
         }
-        Compilation compilation = compilationJpaRepository.save(CompilationMapper.toComp(newCompilationDto, eventSet)); //сохраняем в ремозитории
+        Compilation compilation = compilationJpaRepository.save(CompilationMapper.toComp(newCompilationDto, eventSet));
         return CompilationMapper.toDto(compilation);
     }
 
-    /**
-     * УДаление поборки по id
-     *
-     * @param compId - id подборки
-     */
     public void deleteById(int compId) {
         compilationJpaRepository.findById(compId)
-                .orElseThrow(() -> new ElementNotFoundException("Подборка с id= " + compId + " не найден")); //проверка существаования подборки
+                .orElseThrow(() -> new ElementNotFoundException("Подборка с id= " + compId + " не найден"));
 
         compilationJpaRepository.deleteById(compId);
     }
 
-    /**
-     * Обновление информации о подборке
-     *
-     * @param updateRequest - Объект с новой информацией
-     * @param compId        - id категории
-     * @return - DTO обновленной категории
-     */
     @Transactional
     public CompilationDto update(int compId, UpdateCompilationRequest updateRequest) {
 
         Compilation compilation = compilationJpaRepository.findById(compId)
-                .orElseThrow(() -> new ElementNotFoundException("Подборка с id=" + compId + " не найдена")); //Обновляемая подборка
+                .orElseThrow(() -> new ElementNotFoundException("Подборка с id=" + compId + " не найдена"));
 
         Set<Integer> eventIds = updateRequest.getEvents();
-        Set<Event> eventsSet; //сет событий полученный по сету id
+        Set<Event> eventsSet;
         if (eventIds == null || eventIds.isEmpty()) {
             eventsSet = new HashSet<>();
         } else {
-            eventsSet = eventService.getEventsByIds(eventIds); //взяли сет событий по списку id
+            eventsSet = eventService.getEventsByIds(eventIds);
         }
 
-        /*обновляем значения полей*/
         Boolean pinned = updateRequest.getPinned();
         if (pinned != null) {
             compilation.setPinned(pinned);
@@ -154,7 +120,7 @@ public class CompilationService {
             compilation.setTitle(title);
         }
         compilation.setEvents(eventsSet);
-        /*сохраняем в репозитории*/
+
         compilation = compilationJpaRepository.save(compilation);
 
         return CompilationMapper.toDto(compilation);

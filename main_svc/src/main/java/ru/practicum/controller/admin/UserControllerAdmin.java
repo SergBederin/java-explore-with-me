@@ -22,44 +22,26 @@ public class UserControllerAdmin {
         this.userService = userService;
     }
 
-    /**
-     * Создание пользователя
-     *
-     * @param newUserRequest - DTO нового пользователя
-     * @return - DTO созданного пользователя
-     */
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED) //201
     public UserDto postUser(@Valid @RequestBody NewUserRequest newUserRequest) {
         UserDto userDto = userService.createUser(newUserRequest);
-        log.info("Создан новый пользователь name={}, email={}", userDto.getName(), userDto.getEmail());
-
+        log.info("Выполняется запрос Post/admin/users для создания нового пользователя name={}, email={}", userDto.getName(), userDto.getEmail());
         return userDto;
     }
 
-    /**
-     * Получение списка пользователей по списку id или всех пользователей постранично
-     *
-     * @param ids  - список id. Если список не передается, то учитываются параметры пагинации
-     * @param from - параметр пагинации - с какого элемента выводить
-     * @param size - параметр пагинации - сколько эл-ов выводить
-     * @return - список DTO пользователей
-     */
     @GetMapping
     public List<UserDto> getAllUsers(@RequestParam(name = "ids", required = false) List<Integer> ids,
                                      @RequestParam(name = "from", defaultValue = "0") Integer from,
                                      @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        log.info("Запрошен список пользователей. ids={}, from={}, size={}", ids, from, size);
+        log.info("Выполняется запрос Get/admin/users для получения списка пользователей. ids={}, from={}, size={}", ids, from, size);
         return userService.getUsers(ids, from, size);
     }
 
-    /**
-     * @param userId
-     */
     @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT) //204
     public void deleteUser(@PathVariable(name = "userId") int userId) {
         userService.deleteById(userId);
-        log.info("Удален пользователь с Id={}", userId);
+        log.info("Выполняется запрос Delete/admin/users для удаления пользователь с Id={}", userId);
     }
 }

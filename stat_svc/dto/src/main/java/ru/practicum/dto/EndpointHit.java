@@ -15,13 +15,13 @@ import java.time.LocalDateTime;
 public class EndpointHit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id; //id запроса энедопинта
+    private int id;
     @Column(name = "app")
-    private String app; //Идентификатор сервиса для которого записывается информация
+    private String app;
     @Column(name = "uri")
-    private String uri; //URI для которого был осуществлен запрос
+    private String uri;
     @Column(name = "ip")
-    private String ip; //IP-адрес пользователя, осуществившего запрос
+    private String ip;
     @Column(name = "timestamp")
-    private LocalDateTime timestamp; //Дата и время, когда был совершен запрос к эндпоинту
+    private LocalDateTime timestamp;
 }
