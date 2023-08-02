@@ -6,7 +6,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.client.StatsClient;
-import ru.practicum.main.stats.dto.EndpointHitDto;
+import ru.practicum.dto.EndpointHitDto;
 import ru.practicum.dto.categoty.CategoryDto;
 import ru.practicum.dto.categoty.CategoryMapper;
 import ru.practicum.dto.event.*;

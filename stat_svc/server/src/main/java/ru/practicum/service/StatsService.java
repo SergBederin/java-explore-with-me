@@ -2,10 +2,10 @@ package ru.practicum.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.practicum.main.stats.dto.EndpointHitDto;
-import ru.practicum.main.stats.dto.EndpointHitMapper;
-import ru.practicum.main.stats.dto.EndpointStats;
-import ru.practicum.main.stats.dto.RequestParamDto;
+import ru.practicum.dto.EndpointHitDto;
+import ru.practicum.dto.EndpointHitMapper;
+import ru.practicum.dto.EndpointStats;
+import ru.practicum.dto.RequestParamDto;
 import ru.practicum.repository.StatsJpaRepository;
 
 import java.net.URLDecoder;

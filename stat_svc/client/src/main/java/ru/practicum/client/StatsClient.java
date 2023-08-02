@@ -62,8 +62,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import ru.practicum.main.stats.dto.EndpointHitDto;
-import ru.practicum.main.stats.dto.EndpointStats;
+import ru.practicum.dto.EndpointHitDto;
+import ru.practicum.dto.EndpointStats;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;

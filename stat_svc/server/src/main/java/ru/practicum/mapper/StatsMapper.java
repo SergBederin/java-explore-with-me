@@ -1,7 +1,7 @@
 package ru.practicum.mapper;
 
-import ru.practicum.main.stats.dto.RequestDto;
-import ru.practicum.main.stats.dto.ResponseDto;
+import ru.practicum.dto.RequestDto;
+import ru.practicum.dto.ResponseDto;
 import ru.practicum.model.Stats;
 
 public class StatsMapper {
