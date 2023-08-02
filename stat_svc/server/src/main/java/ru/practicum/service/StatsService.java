@@ -6,6 +6,7 @@ import ru.practicum.dto.EndpointHitDto;
 import ru.practicum.dto.EndpointHitMapper;
 import ru.practicum.dto.EndpointStats;
 import ru.practicum.dto.RequestParamDto;
+import ru.practicum.exception.ValidationException;
 import ru.practicum.repository.StatsJpaRepository;
 
 import java.net.URLDecoder;
@@ -64,7 +65,7 @@ public class StatsService {
 
         //проверка параметров
         if (start.isAfter(end)) {
-            throw new RuntimeException("время начала не может быть поздне, чем  время конца выборки");
+            throw new ValidationException("Неправильно указано время для поиска!");
         }
 
         String[] uris = requestParamDto.getUris();
