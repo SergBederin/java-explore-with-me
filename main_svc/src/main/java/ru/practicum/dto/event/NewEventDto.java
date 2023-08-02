@@ -19,7 +19,7 @@ public class NewEventDto {
     private String annotation; //Краткое описание
     @NotNull
     private int category; //категория
-    @NotNull
+    @NotBlank
     @Size(min = 20, max = 7000)
     private String description;   //Полное описание события
     @NotBlank

@@ -1,66 +1,87 @@
 package ru.practicum.service;
 
-import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.practicum.main.stats.dto.RequestDto;
+import ru.practicum.main.stats.dto.EndpointHitDto;
+import ru.practicum.main.stats.dto.EndpointHitMapper;
+import ru.practicum.main.stats.dto.EndpointStats;
 import ru.practicum.main.stats.dto.RequestParamDto;
-import ru.practicum.main.stats.dto.ResponseDto;
-import ru.practicum.exception.ValidationException;
-import ru.practicum.mapper.StatsMapper;
-import ru.practicum.model.Stats;
-import ru.practicum.repository.StatsRepository;
+import ru.practicum.repository.StatsJpaRepository;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-@NoArgsConstructor
-@Slf4j
 public class StatsService {
     private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    @Autowired
-    private StatsRepository repository;
 
-    public void hit(RequestDto requestDto) {
-        Stats state = StatsMapper.mapToStat(requestDto);
-        state.setTimestamp(LocalDateTime.now());
-        log.info("Добавлена запись статистики = {}", requestDto);
-        repository.save(state);
+    private final StatsJpaRepository statsJpaRepository; //репозиторий для хранения обращений к эндпоинтам
+
+
+    @Autowired
+    public StatsService(StatsJpaRepository statsJpaRepository) {
+        this.statsJpaRepository = statsJpaRepository;
     }
 
-    public List<ResponseDto> stats(String start, String end, List<String> uris, boolean unique) {
-        RequestParamDto requestParamDto = new RequestParamDto(start, end, uris, unique); //собираем все параметры запроса в отдельный DTO
+    /**
+     * Сохранения информации о вызываемом эндпоинте
+     *
+     * @param hitDto - DTO эндпоинта
+     */
+    public void saveHit(EndpointHitDto hitDto) {
+        statsJpaRepository.save(EndpointHitMapper.toHit(hitDto)); //преобразуем DTO в сущность и сохраняем в базу
+    }
+
+    /**
+     * Выгрузка всех запросов из БД
+     *
+     * @return список EndpointHitDto
+     */
+    public List<EndpointHitDto> getAllHits() {
+        return statsJpaRepository.findAll().stream()
+                .map(EndpointHitMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Получение статистики о запрашиваемых эндпоинтах
+     *
+     * @param requestParamDto - DTO для передачи параметров запроса в методы сервисов
+     * @return - список объектов ViewStats с информацией о статистике запросов
+     */
+    public List<EndpointStats> getStats(RequestParamDto requestParamDto) {
+        /*преобразование зашифрованных строк в стандартную кодировку*/
         String startDecoded = URLDecoder.decode(requestParamDto.getStart(), StandardCharsets.UTF_8);
         String endDecoded = URLDecoder.decode(requestParamDto.getEnd(), StandardCharsets.UTF_8);
 
         /*преобразование полученных строк в LocalDateTime*/
-        LocalDateTime timeStart = LocalDateTime.parse(startDecoded, TIME_FORMAT);
-        LocalDateTime timeEnd = LocalDateTime.parse(endDecoded, TIME_FORMAT);
-        /*DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime timeStart = LocalDateTime.parse(start, formatter);
-        LocalDateTime timeEnd = LocalDateTime.parse(end, formatter);*/
-        if (timeStart.isAfter(timeEnd)) {
-            throw new ValidationException("Неправильно указано время для поиска!");
+        LocalDateTime start = LocalDateTime.parse(startDecoded, TIME_FORMAT);
+        LocalDateTime end = LocalDateTime.parse(endDecoded, TIME_FORMAT);
+
+        //проверка параметров
+        if (start.isAfter(end)) {
+            throw new RuntimeException("время начала не может быть поздне, чем  время конца выборки");
         }
 
-        if (uris != null && !uris.isEmpty()) {
-            if (unique) {
-                return repository.findStatUriUnique(timeStart, timeEnd, uris);
+        String[] uris = requestParamDto.getUris();
+
+        /*в зависимости от параметров запроса запрашиваем нужные данные*/
+        if (requestParamDto.isUnique()) {
+            if (uris == null) {
+                return statsJpaRepository.getStatsUnique(start, end); //получение статистики уникальные ip БЕЗ фильтра URI
             } else {
-                return repository.findStatUri(timeStart, timeEnd, uris);
+                return statsJpaRepository.getStatsUniqueWithUris(start, end, uris); //получение статистики уникальные ip C фильтром URI
             }
-        } else {
-            if (unique) {
-                return repository.findStatUnique(timeStart, timeEnd);
+        } else { // !unique
+            if (uris == null) {
+                return statsJpaRepository.getStatsNotUnique(start, end); //получение статистики НЕ уникальные БЕЗ фильтра URI
             } else {
-                return repository.findStat(timeStart, timeEnd);
+                return statsJpaRepository.getStatsNotUniqueWithUris(start, end, uris); //получение статистики уникальные ip C фильтром URI
             }
         }
     }
 }
-

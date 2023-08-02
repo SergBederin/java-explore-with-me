@@ -4,38 +4,66 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.main.stats.dto.RequestDto;
-import ru.practicum.main.stats.dto.ResponseDto;
+import ru.practicum.main.stats.dto.EndpointHitDto;
+import ru.practicum.main.stats.dto.EndpointStats;
+import ru.practicum.main.stats.dto.RequestParamDto;
 import ru.practicum.service.StatsService;
 
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+/**
+ * Реализация REST-контроллера сервиса статистики
+ */
 @RestController
-@Validated
 @Slf4j
 @RequiredArgsConstructor
-
 public class StatsController {
     private final StatsService statsService;
 
+    /**
+     * Сохранение информации о вызванном эндпоинте
+     *
+     * @param hitDto - DTO для сохранения
+     * @return - текстовый ответ о результате операции
+     */
     @PostMapping("/hit")
-    public ResponseEntity<String> postHit(@Valid @RequestBody RequestDto requestDto) {
-        log.info("Выполняется запрос Post/hit для добавления эндпоинта {}", requestDto);
-        statsService.hit(requestDto);
-        return new ResponseEntity<>("Информация сохранена", HttpStatus.CREATED);
+    public ResponseEntity<String> postHit(@Valid @RequestBody EndpointHitDto hitDto) {
+        log.info("Statistic service: сохранен запрос для эндпоинта {}", hitDto.getUri()); //логируем
+        statsService.saveHit(hitDto); //вызываем метод сервиса, для сохранения инф.об эндпоинте
+        return new ResponseEntity<>("Информация сохранена", HttpStatus.CREATED); //возвращаем текстовый ответ
     }
 
+    /**
+     * Получение статистики по запрошенным URI за заданный период.
+     *
+     * @param start  - начало периода
+     * @param end    - окончание периода
+     * @param uris   - список URI, для которых требуется статтистика (необязательный параметр)
+     * @param unique - флаг учета только запроса с уникальных IP-адресов (по умолчанию = false)
+     * @return список объектов статистики ViewStats по каждому URI
+     * @throws UnsupportedEncodingException - в случае неправильно кодировка параметров start, end
+     */
     @GetMapping("/stats")
-    public List<ResponseDto> getStats(@RequestParam(name = "start") String start,
-                                      @RequestParam(name = "end") String end,
-                                      @RequestParam(name = "uris", required = false) List<String> uris,
-                                      @RequestParam(name = "unique", defaultValue = "false") boolean unique) {
+    public List<EndpointStats> getStats(@RequestParam(name = "start") String start,
+                                        @RequestParam(name = "end") String end,
+                                        @RequestParam(name = "uris", required = false) String[] uris,
+                                        @RequestParam(name = "unique", defaultValue = "false") boolean unique) {
+        log.info("Statistic service: запрошена статистика для эндпоинтов {}", uris); //логируем
+        RequestParamDto requestDto = new RequestParamDto(start, end, uris, unique); //собираем все параметры запроса в отдельный DTO
+        return statsService.getStats(requestDto); //получаем статистику от сервиса по запросу
+    }
 
-        log.info("Выполняется запрос GET/stats для получения статистики для эндпоинтов {}", uris);
-        return statsService.stats(start, end, uris, unique);
+    /**
+     * Запрос всей имеющейся статистики (unique = false)
+     *
+     * @return - статистика по всем URI
+     */
+    @GetMapping("/hits")
+    public List<EndpointHitDto> getAllHits() {
+        log.info("Statistic service: запрошена вся статистика"); //логируем
+        return statsService.getAllHits();
     }
 }
-

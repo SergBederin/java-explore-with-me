@@ -87,7 +87,7 @@ public class StatsClient {
                 .build();
     }
 
-    public static List<EndpointStats> stats(LocalDateTime startTime, LocalDateTime endTime, @Nullable String[] uris, @Nullable Boolean unique) {
+    public static List<EndpointStats> getStats(LocalDateTime startTime, LocalDateTime endTime, @Nullable String[] uris, @Nullable Boolean unique) {
         String startString = startTime.format(TIME_FORMAT);
         String endString = endTime.format(TIME_FORMAT);
         String startEncoded = URLEncoder.encode(startString, StandardCharsets.UTF_8);
@@ -109,7 +109,7 @@ public class StatsClient {
         return makeAndSendGetStatsRequest(HttpMethod.GET, sb.toString(), parameters, null);
     }
 
-    public static ResponseEntity<String> hit(EndpointHitDto hit) {
+    public static ResponseEntity<String> postHit(EndpointHitDto hit) {
         ResponseEntity<String> responseEntity = makeAndSendPostHitRequest(HttpMethod.POST, "/hit", null, hit);
         return responseEntity;
     }
@@ -133,7 +133,7 @@ public class StatsClient {
         eventUris.toArray(uriArray); //заполнили массив строками из списка URI
 
         /*запрашиваем у клиента статистики данные по нужным URI*/
-        List<EndpointStats> endpointStatsList = stats(LocalDateTime.of(1970, 01, 01, 01, 01), LocalDateTime.now(), uriArray, true);
+        List<EndpointStats> endpointStatsList = getStats(LocalDateTime.of(1970, 01, 01, 01, 01), LocalDateTime.now(), uriArray, true);
 
         if (endpointStatsList == null || endpointStatsList.isEmpty()) { //если нет статистики по эндпоинтам, возвращаем мапу с нулевыми просмотрами
             return eventsId.stream()

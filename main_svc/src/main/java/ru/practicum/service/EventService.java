@@ -165,7 +165,7 @@ public class EventService {
         endpointHitDto.setTimestamp(LocalDateTime.now().format(TIME_FORMAT));
         endpointHitDto.setUri(request.getRequestURI());
 
-        StatsClient.hit(endpointHitDto); //сохраняем информацию о запросе в сервисе статистики
+        StatsClient.postHit(endpointHitDto); //сохраняем информацию о запросе в сервисе статистики
 
         return eventDto;
     }
@@ -556,7 +556,7 @@ public class EventService {
         endpointHitDto.setTimestamp(LocalDateTime.now().format(TIME_FORMAT));
         endpointHitDto.setUri(request.getRequestURI());
 
-        StatsClient.hit(endpointHitDto); //сохраняем информацию о запросе в сервисе статистики
+        StatsClient.postHit(endpointHitDto); //сохраняем информацию о запросе в сервисе статистики
 
         Map<Integer, Long> idViewsMap = StatsClient.getMapIdViews(resultEvents.stream().map(Event::getId).collect(Collectors.toList())); // получаем через клиента статистики мапу <id события, кол-во просмотров>
 
