@@ -6,6 +6,9 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.Set;
 
+/**
+ * Подборка событий (сущность)
+ */
 @Entity
 @Table(name = "compilations", schema = "public")
 @Getter
@@ -14,13 +17,13 @@ public class Compilation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int id; //id подборки
 
     @Column(name = "pinned")
-    private boolean pinned;
+    private boolean pinned; //Закреплена ли подборка на главной странице сайта
 
     @Column(name = "title")
-    private String title;
+    private String title; //Заголовок подборки
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

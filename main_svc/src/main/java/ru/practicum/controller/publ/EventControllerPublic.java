@@ -39,7 +39,7 @@ public class EventControllerPublic {
                                          @RequestParam(name = "size", defaultValue = "10") @Positive int size,
                                          HttpServletRequest request) {
         List<EventShortDto> eventDtos = eventService.searchEventsWithStats(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size, request);
-        log.info("Выполняется запрос Get/events для поиска событий через публичный API");
+        log.info("Выполнен поиск событий через публичный API");
         return eventDtos;
     }
 
@@ -48,7 +48,7 @@ public class EventControllerPublic {
     public EventFullDto getEvent(@PathVariable(name = "eventId") int eventId,
                                  HttpServletRequest request) {
         EventFullDto eventDto = eventService.getEventByIdWithStats(eventId, request);
-        log.info("Выполняется запрос Get/events/{eventId} для получения события id={}, запрос сохранен в сервисе статистики", eventId);
+        log.info("Получено событие id={}, запрос сохранен в сервисе статистики", eventId);
         return eventDto;
     }
 }

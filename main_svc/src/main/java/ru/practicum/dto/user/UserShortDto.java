@@ -6,11 +6,14 @@ import lombok.Setter;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+/**
+ * Урезанная информация о пользователе
+ */
 @Getter
 @Setter
 public class UserShortDto {
     @NotNull
-    private int id;
+    private int id; //id пользователя
     @NotBlank
-    private String name;
+    private String name; //имя пользователя
 }

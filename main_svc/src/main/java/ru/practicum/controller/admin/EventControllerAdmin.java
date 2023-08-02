@@ -32,7 +32,7 @@ public class EventControllerAdmin {
     public EventFullDto patchEvent(@PathVariable(name = "eventId") @Positive int eventId,
                                    @Valid @RequestBody UpdateEventAdminRequest adminRequest) {
         EventFullDto eventFullDto = eventService.patchAdminEvent(eventId, adminRequest);
-        log.info("Выполняется запрос Patch/admin/events для обновления Админом события с Id={}", eventId);
+        log.info("Админ обновил событие с Id={}", eventId);
         return eventFullDto;
     }
 
@@ -46,7 +46,8 @@ public class EventControllerAdmin {
                                            @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero int from,
                                            @RequestParam(name = "size", defaultValue = "10") @Positive int size) {
         List<EventFullDto> events = eventService.searchEvents(users, states, categories, rangeStart, rangeEnd, from, size);
-        log.info("Выполняется запрос Get/admin/events для поиска событий через API администратора");
+        log.info("Выполнен поиск событий через API администратора");
         return events;
     }
+
 }

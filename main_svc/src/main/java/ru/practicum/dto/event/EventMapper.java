@@ -9,12 +9,17 @@ import ru.practicum.model.User;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Класс, содержащий статические методоы для преобразования объекта Event в его DTO и обратно
+ */
 public class EventMapper {
 
     private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public static Event toEvent(NewEventDto newEventDto, Category category, User user) {
         Event event = new Event();
+
+        /*заполняем поля объекта значениями из DTO*/
         event.setAnnotation(newEventDto.getAnnotation());
         event.setCategory(category);
         event.setCreatedOn(LocalDateTime.now());
@@ -22,6 +27,7 @@ public class EventMapper {
         event.setEventDate(LocalDateTime.parse(newEventDto.getEventDate(), TIME_FORMAT));
         event.setInitiator(user);
         event.setLocation(newEventDto.getLocation());
+
         event.setPaid(newEventDto.isPaid());
         event.setParticipantLimit(newEventDto.getParticipantLimit());
         event.setPublishedOn(LocalDateTime.now());
@@ -33,6 +39,8 @@ public class EventMapper {
 
     public static Event toEvent(EventFullDto eventFullDto, User user) {
         Event event = new Event();
+
+        /*заполняем поля объекта значениями из DTO*/
         event.setId(eventFullDto.getId());
         event.setAnnotation(eventFullDto.getAnnotation());
         event.setCategory(CategoryMapper.toCategory(eventFullDto.getCategory()));
@@ -42,6 +50,7 @@ public class EventMapper {
         event.setEventDate(LocalDateTime.parse(eventFullDto.getEventDate(), TIME_FORMAT));
         event.setInitiator(user);
         event.setLocation(eventFullDto.getLocation());
+
         event.setPaid(eventFullDto.isPaid());
         event.setParticipantLimit(eventFullDto.getParticipantLimit());
         event.setPublishedOn(LocalDateTime.now());
@@ -52,8 +61,16 @@ public class EventMapper {
         return event;
     }
 
+    /**
+     * Преобразование объекта Event в EventShortDto
+     *
+     * @param event - Объект события
+     * @return - DTO события
+     */
     public static EventShortDto toShortDto(Event event, long views) {
         EventShortDto shortDto = new EventShortDto();
+
+        /*заполняем поля DTO значениями из объекта*/
         shortDto.setId(event.getId());
         shortDto.setAnnotation(event.getAnnotation());
         shortDto.setCategory(CategoryMapper.toDto(event.getCategory()));
@@ -63,11 +80,20 @@ public class EventMapper {
         shortDto.setPaid(event.isPaid());
         shortDto.setTitle(event.getTitle());
         shortDto.setViews(views);
+
         return shortDto;
     }
 
+    /**
+     * Преобразование объекта Event в EventFullDto
+     *
+     * @param event - Объект события
+     * @return - DTO события
+     */
     public static EventFullDto toFullDto(Event event, long views) {
         EventFullDto eventFullDto = new EventFullDto();
+
+        /*заполняем поля DTO значениями из объекта*/
         eventFullDto.setId(event.getId());
         eventFullDto.setAnnotation(event.getAnnotation());
         eventFullDto.setCategory(CategoryMapper.toDto(event.getCategory()));
@@ -84,6 +110,7 @@ public class EventMapper {
         eventFullDto.setState(event.getState());
         eventFullDto.setTitle(event.getTitle());
         eventFullDto.setViews(views);
+
         return eventFullDto;
     }
 

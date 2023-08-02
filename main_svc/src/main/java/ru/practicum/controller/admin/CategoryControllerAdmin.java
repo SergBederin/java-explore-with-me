@@ -22,27 +22,45 @@ public class CategoryControllerAdmin {
         this.categoryService = categoryService;
     }
 
+    /**
+     * Создание категории
+     *
+     * @param newCategoryDto - DTO категории
+     * @return - DTO созданной категории
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED) //201
     public CategoryDto postCategory(@Valid @RequestBody NewCategoryDto newCategoryDto) {
         CategoryDto categoryDto = categoryService.create(newCategoryDto);
-        log.info("Выполняется запрос Post/admin/categories для создания новой категории id={}, name={}", categoryDto.getId(), categoryDto.getName());
+        log.info("Создана новая категория id={}, name={}", categoryDto.getId(), categoryDto.getName());
         return categoryDto;
     }
 
+    /**
+     * УДаление категории по id
+     *
+     * @param catId - id категории
+     */
     @DeleteMapping("/{catId}")
     @ResponseStatus(HttpStatus.NO_CONTENT) //204
     public void deleteUser(@PathVariable(name = "catId") int catId) {
         categoryService.deleteById(catId);
-        log.info("Выполняется запрос Delete/admin/categories/{catId} удаления категории с Id={}", catId);
+        log.info("Удалена категория с Id={}", catId);
     }
 
+    /**
+     * Обновление категории
+     *
+     * @param catId       - id обновляемой категории
+     * @param categoryDto - DTO категории с новыми значенияами полей
+     * @return - DTO Обновленной категории
+     */
     @PatchMapping("/{catId}")
     @ResponseStatus(HttpStatus.OK) //200
     public CategoryDto patchCategory(@PathVariable(name = "catId") int catId,
                                      @Valid @RequestBody CategoryDto categoryDto) {
         CategoryDto updatedCategoryDto = categoryService.updateCategory(catId, categoryDto);
-        log.info("Выполняется запрос Patchadmin/categories/{catId} на зменение категории с Id={}, name={}", updatedCategoryDto.getId(), updatedCategoryDto.getName());
+        log.info("Изменена категория. Id={}, name={}", updatedCategoryDto.getId(), updatedCategoryDto.getName());
         return updatedCategoryDto;
     }
 }

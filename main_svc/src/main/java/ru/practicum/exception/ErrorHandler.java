@@ -23,10 +23,11 @@ public class ErrorHandler {
     @ExceptionHandler({PaginationParametersException.class, BadParameterException.class})
     public ResponseEntity<ApiError> handlePaginationException(RuntimeException ex) {
         ApiError apiError = new ApiError();
+        /*получаем стектрейсы*/
         List<String> stackTraceList = Arrays.stream(ex.getStackTrace())
                 .map(StackTraceElement::toString)
                 .collect(Collectors.toList());
-
+        /*заполняем остальные поля ответа*/
         apiError.setErrors(stackTraceList);
         apiError.setReason(HttpStatus.BAD_REQUEST.getReasonPhrase());
         apiError.setTimeStamp(LocalDateTime.now().format(TIME_FORMAT));
@@ -39,11 +40,11 @@ public class ErrorHandler {
     @ExceptionHandler({ElementNotFoundException.class, NoSuchElementException.class})
     public ResponseEntity<ApiError> handleElementNotFoundException(RuntimeException ex) {
         ApiError apiError = new ApiError();
-
+        /*получаем стектрейсы*/
         List<String> stackTraceList = Arrays.stream(ex.getStackTrace())
                 .map(StackTraceElement::toString)
                 .collect(Collectors.toList());
-
+        /*заполняем остальные поля ответа*/
         apiError.setErrors(stackTraceList);
         apiError.setReason(HttpStatus.NOT_FOUND.getReasonPhrase());
         apiError.setTimeStamp(LocalDateTime.now().format(TIME_FORMAT));
@@ -56,11 +57,11 @@ public class ErrorHandler {
     @ExceptionHandler(AlreadyExistException.class)
     public ResponseEntity<ApiError> handleAlreadyExistException(AlreadyExistException ex) {
         ApiError apiError = new ApiError();
-
+        /*получаем стектрейсы*/
         List<String> stackTraceList = Arrays.stream(ex.getStackTrace())
                 .map(StackTraceElement::toString)
                 .collect(Collectors.toList());
-
+        /*заполняем остальные поля ответа*/
         apiError.setErrors(stackTraceList);
         apiError.setReason(HttpStatus.CONFLICT.getReasonPhrase());
         apiError.setTimeStamp(LocalDateTime.now().format(TIME_FORMAT));
@@ -73,11 +74,11 @@ public class ErrorHandler {
     @ExceptionHandler({CreateConditionException.class, DataConflictException.class})
     public ResponseEntity<ApiError> handleCreateConditionException(RuntimeException ex) {
         ApiError apiError = new ApiError();
-
+        /*получаем стектрейсы*/
         List<String> stackTraceList = Arrays.stream(ex.getStackTrace())
                 .map(StackTraceElement::toString)
                 .collect(Collectors.toList());
-
+        /*заполняем остальные поля ответа*/
         apiError.setErrors(stackTraceList);
         apiError.setReason(HttpStatus.CONFLICT.getReasonPhrase());
         apiError.setTimeStamp(LocalDateTime.now().format(TIME_FORMAT));
@@ -91,11 +92,11 @@ public class ErrorHandler {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ApiError> handleAllAnother(RuntimeException ex) {
         ApiError apiError = new ApiError();
-
+        /*получаем стектрейсы*/
         List<String> stackTraceList = Arrays.stream(ex.getStackTrace())
                 .map(StackTraceElement::toString)
                 .collect(Collectors.toList());
-
+        /*заполняем остальные поля ответа*/
         apiError.setErrors(stackTraceList);
         apiError.setReason(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
         apiError.setTimeStamp(LocalDateTime.now().format(TIME_FORMAT));

@@ -6,6 +6,9 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.Objects;
 
+/**
+ * Пользователь (сущность)
+ */
 @Entity
 @Table(name = "users", schema = "public")
 @Getter
@@ -14,11 +17,11 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int id; //id пользователя
     @Column(name = "email", unique = true)
-    private String email;
+    private String email; //email
     @Column(name = "name")
-    private String name;
+    private String name; //имя пользователя
 
     @Override
     public boolean equals(Object o) {
