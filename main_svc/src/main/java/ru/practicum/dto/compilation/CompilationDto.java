@@ -9,18 +9,15 @@ import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Подборка событий
- */
 @Getter
 @Setter
 public class CompilationDto {
     @NotNull
-    private int id; //id подборки
+    private int id;
     @NotNull
-    private boolean pinned; //Закреплена ли подборка на главной странице сайта
+    private boolean pinned;
     @NotBlank
-    private String title; //Заголовок подборки
+    private String title;
     @NotNull
-    private Set<EventShortDto> events = new HashSet<>(); // Список событий входящих в подборку
+    private Set<EventShortDto> events = new HashSet<>();
 }

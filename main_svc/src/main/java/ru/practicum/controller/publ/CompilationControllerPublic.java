@@ -22,9 +22,6 @@ public class CompilationControllerPublic {
         this.compilationService = compilationService;
     }
 
-    /**
-     * получение всех подборок событий
-     */
     @GetMapping
     public List<CompilationDto> getCompilations(@RequestParam(name = "pinned", defaultValue = "false") boolean pinned,
                                                 @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero int from,
@@ -34,9 +31,6 @@ public class CompilationControllerPublic {
         return compnDtoList;
     }
 
-    /**
-     * получение подборки событий по ее id
-     */
     @GetMapping("/{compId}")
     public CompilationDto getCompilations(@PathVariable int compId) {
         CompilationDto compilationDto = compilationService.getCompById(compId);

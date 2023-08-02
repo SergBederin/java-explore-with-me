@@ -29,13 +29,6 @@ public class EventControllerPrivate {
         this.eventService = eventService;
     }
 
-    /**
-     * Создание события
-     *
-     * @param userId      - id пользователя
-     * @param newEventDto - DTO события
-     * @return - DTO созданного события
-     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED) //201
     public EventFullDto postEvent(@PathVariable(name = "userId") int userId,
@@ -45,14 +38,6 @@ public class EventControllerPrivate {
         return eventDto;
     }
 
-    /**
-     * Получение событий, добавленных текущим пользователем
-     *
-     * @param userId - id пользователя
-     * @param from   - параметр пагинации - с какого элемента выводить
-     * @param size   - параметр пагинации - сколько эл-ов выводить
-     * @return - Список DTO Событий
-     */
     @GetMapping
     @ResponseStatus(HttpStatus.OK) //200
     public List<EventShortDto> getEventsByUser(@PathVariable(name = "userId") @Positive int userId,
@@ -63,13 +48,6 @@ public class EventControllerPrivate {
         return eventShortDtos;
     }
 
-    /**
-     * Получение события, добавленного текущим пользователем, по указанному Id
-     *
-     * @param userId  - id пользователя
-     * @param eventId - id события
-     * @return - DTO События
-     */
     @GetMapping("/{eventId}")
     @ResponseStatus(HttpStatus.OK) //200
     public EventFullDto getEventByUserAndId(@PathVariable(name = "userId") @Positive int userId,
@@ -89,13 +67,6 @@ public class EventControllerPrivate {
         return eventFullDto;
     }
 
-    /**
-     * Получение инфомрации о запросах на участие в событии текущего пользователя
-     *
-     * @param userId  - id пользователя
-     * @param eventId - id события
-     * @return - DTO participationRequestDto
-     */
     @GetMapping("/{eventId}/requests")
     @ResponseStatus(HttpStatus.OK) //200
     public List<ParticipationRequestDto> getParticipationInfo(@PathVariable(name = "userId") @Positive int userId,
@@ -105,9 +76,6 @@ public class EventControllerPrivate {
         return partRequestDtoList;
     }
 
-    /**
-     * Изменение статуса (подтверждена, отменена) заявок на участие в событии текущего пользователя
-     */
     @PatchMapping("/{eventId}/requests")
     @ResponseStatus(HttpStatus.OK) //200
     public EventRequestStatusUpdateResult patchEventStatus(@PathVariable(name = "userId") @Positive int userId,
@@ -117,5 +85,4 @@ public class EventControllerPrivate {
         log.info("Обновлен статус события с Id={} , добавленное пользователем с id={}. Статус = {}", eventId, userId, statusUpdateRequest.getStatus().toString());
         return updateStatusResult;
     }
-
 }

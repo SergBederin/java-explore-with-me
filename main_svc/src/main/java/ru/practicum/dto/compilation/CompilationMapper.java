@@ -9,32 +9,23 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * Класс, содержащий статические методоы для преобразования объекта Compilation в его DTO и обратно
- */
 public class CompilationMapper {
-    /**
-     * Преобразование объекта Compilation в CompilationDto
-     *
-     * @param compilation - исходный объект
-     * @return - CompilationDto
-     */
+
     public static CompilationDto toDto(Compilation compilation) {
         CompilationDto compilationDto = new CompilationDto();
-        /*заполнение полей DTO значениями из объекта и доп.данных*/
+
         compilationDto.setId(compilation.getId());
         compilationDto.setPinned(compilation.isPinned());
         compilationDto.setTitle(compilation.getTitle());
 
-        /*составляем список URI событий из подборки*/
-        Set<Event> events = compilation.getEvents(); //получили список событий
+        Set<Event> events = compilation.getEvents();
         if (events == null || events.size() == 0) {
             return compilationDto;
         }
         Map<Integer, Long> idViewsMap = StatsClient.getMapIdViews(events.stream()
                 .map(Event::getId)
-                .collect(Collectors.toList())); // получаем через клиента статистики мапу <id события, кол-во просмотров>
-        /*в поле events создаваемого CompilationDto складываем соответствующий set<EventShortDto>*/
+                .collect(Collectors.toList()));
+
         compilationDto.setEvents(compilation.getEvents().stream()
                 .map(e -> EventMapper.toShortDto(e, idViewsMap.get(e.getId())))
                 .collect(Collectors.toSet()));
@@ -42,16 +33,9 @@ public class CompilationMapper {
         return compilationDto;
     }
 
-    /**
-     * Преобразование CompilationDto в Compilation
-     *
-     * @param compilationDto - DTO
-     * @return - Compilation
-     */
     public static Compilation toComp(CompilationDto compilationDto) {
         Compilation compilation = new Compilation();
 
-        /*заполнение полей объекта значениями из DTO*/
         compilation.setId(compilationDto.getId());
         compilation.setTitle(compilationDto.getTitle());
         compilation.setPinned(compilationDto.isPinned());
@@ -59,17 +43,9 @@ public class CompilationMapper {
         return compilation;
     }
 
-
-    /**
-     * Преобразование NewCompilationDto в Compilation
-     *
-     * @param newCompilationDto - DTO
-     * @return - Compilation
-     */
     public static Compilation toComp(NewCompilationDto newCompilationDto, Set<Event> events) {
         Compilation compilation = new Compilation();
 
-        /*заполнение полей Объекта*/
         compilation.setTitle(newCompilationDto.getTitle());
         compilation.setEvents(events);
         compilation.setPinned(newCompilationDto.isPinned());
