@@ -12,9 +12,16 @@ public class ParticipationMapper {
 
     private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+    /**
+     * Преобразование объекта ParticipationRequest в ParticipationRequestDto
+     *
+     * @param partRequest - объект
+     * @return - DTO
+     */
     public static ParticipationRequestDto toDto(ParticipationRequest partRequest) {
         ParticipationRequestDto dto = new ParticipationRequestDto();
 
+        /*заполнение полей DTO Значениями из объекта*/
         dto.setId(partRequest.getId());
         dto.setCreated(partRequest.getCreated().format(TIME_FORMAT));
         dto.setEvent(partRequest.getEvent().getId());
@@ -24,9 +31,18 @@ public class ParticipationMapper {
         return dto;
     }
 
+    /**
+     * Преобразование DTO ParticipationRequestDto в ParticipationRequest
+     *
+     * @param dto   - DTO Запроса на участие
+     * @param event - событие
+     * @param user  - пользователь на участие
+     * @return - запрос на участие
+     */
     public static ParticipationRequest toPr(ParticipationRequestDto dto, Event event, User user) {
         ParticipationRequest pr = new ParticipationRequest();
 
+        /*заполнение полей DTO Значениями из объекта*/
         pr.setId(dto.getId());
         pr.setCreated(LocalDateTime.parse(dto.getCreated(), TIME_FORMAT));
         pr.setEvent(event);

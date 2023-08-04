@@ -5,16 +5,19 @@ import lombok.Setter;
 
 import javax.validation.constraints.*;
 
+/**
+ * Пользователь
+ */
 @Getter
 @Setter
 public class UserDto {
-    private int id;
+    private int id; //id пользователя
     @Email
     @Pattern(regexp = ".+@.+\\..+")
     @NotNull
     @Size(min = 6, max = 254)
-    private String email;
+    private String email; //email
     @NotBlank
     @Size(min = 2, max = 250)
-    private String name;
+    private String name; //имя пользователя
 }

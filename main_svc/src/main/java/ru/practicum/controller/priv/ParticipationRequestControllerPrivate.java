@@ -3,6 +3,7 @@ package ru.practicum.controller.priv;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.event.EventFullDto;
 import ru.practicum.dto.participationRequest.ParticipationRequestDto;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/users/{userId}/requests")
 @Slf4j
+@Validated
 public class ParticipationRequestControllerPrivate {
 
     private final ParticipationService participationService;
@@ -27,6 +29,13 @@ public class ParticipationRequestControllerPrivate {
         this.eventService = eventService;
     }
 
+    /**
+     * Создание запроса на участие
+     *
+     * @param userId  - id пользователя
+     * @param eventId - id события
+     * @return - DTO запроса
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ParticipationRequestDto postParticipationRequest(@PathVariable(name = "userId") @Positive int userId,
@@ -37,6 +46,12 @@ public class ParticipationRequestControllerPrivate {
         return requestDto;
     }
 
+    /**
+     * Получение информации о заявках на уастие текущего пользователя в событиях других пользователей
+     *
+     * @param userId - id пользователя
+     * @return - список заявкок
+     */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ParticipationRequestDto> getParticipationRequestsByUser(@PathVariable(name = "userId") @Positive int userId) {
@@ -46,6 +61,12 @@ public class ParticipationRequestControllerPrivate {
         return requestDtos;
     }
 
+    /**
+     * Отмена своего запроса на участие в событии
+     *
+     * @param userId    - id пользователя
+     * @param requestId - id запроса
+     */
     @PatchMapping("/{requestId}/cancel")
     @ResponseStatus(HttpStatus.OK)
     public ParticipationRequestDto patchRequestCancel(@PathVariable(name = "userId") @Positive int userId,
@@ -54,4 +75,5 @@ public class ParticipationRequestControllerPrivate {
         log.info("Отмена заявки Id={} от пользователя с userid={}", requestId, userId);
         return participationRequestDto;
     }
+
 }
