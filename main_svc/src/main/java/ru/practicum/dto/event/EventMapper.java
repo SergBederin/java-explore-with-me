@@ -11,13 +11,16 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+/**
+ * Класс, содержащий статические методоы для преобразования объекта Event в его DTO и обратно
+ */
 public class EventMapper {
 
     private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public static Event toEvent(NewEventDto newEventDto, Category category, User user) {
-        Event event = new Event();
 
+        Event event = new Event();
         event.setAnnotation(newEventDto.getAnnotation());
         event.setCategory(category);
         event.setCreatedOn(LocalDateTime.now());
@@ -25,7 +28,6 @@ public class EventMapper {
         event.setEventDate(LocalDateTime.parse(newEventDto.getEventDate(), TIME_FORMAT));
         event.setInitiator(user);
         event.setLocation(newEventDto.getLocation());
-
         event.setPaid(newEventDto.isPaid());
         event.setParticipantLimit(newEventDto.getParticipantLimit());
         event.setPublishedOn(LocalDateTime.now());
@@ -36,8 +38,8 @@ public class EventMapper {
     }
 
     public static Event toEvent(EventFullDto eventFullDto, User user) {
-        Event event = new Event();
 
+        Event event = new Event();
         event.setId(eventFullDto.getId());
         event.setAnnotation(eventFullDto.getAnnotation());
         event.setCategory(CategoryMapper.toCategory(eventFullDto.getCategory()));
@@ -47,20 +49,17 @@ public class EventMapper {
         event.setEventDate(LocalDateTime.parse(eventFullDto.getEventDate(), TIME_FORMAT));
         event.setInitiator(user);
         event.setLocation(eventFullDto.getLocation());
-
         event.setPaid(eventFullDto.isPaid());
         event.setParticipantLimit(eventFullDto.getParticipantLimit());
         event.setPublishedOn(LocalDateTime.now());
         event.setRequestModeration(eventFullDto.isRequestModeration());
         event.setState(eventFullDto.getState());
         event.setTitle(eventFullDto.getTitle());
-
         return event;
     }
 
     public static EventShortDto toShortDto(Event event, long views) {
         EventShortDto shortDto = new EventShortDto();
-
         shortDto.setId(event.getId());
         shortDto.setAnnotation(event.getAnnotation());
         shortDto.setCategory(CategoryMapper.toDto(event.getCategory()));
@@ -70,13 +69,11 @@ public class EventMapper {
         shortDto.setPaid(event.isPaid());
         shortDto.setTitle(event.getTitle());
         shortDto.setViews(views);
-
         return shortDto;
     }
 
     public static EventFullDto toFullDto(Event event, long views) {
         EventFullDto eventFullDto = new EventFullDto();
-
         eventFullDto.setId(event.getId());
         eventFullDto.setAnnotation(event.getAnnotation());
         eventFullDto.setCategory(CategoryMapper.toDto(event.getCategory()));
@@ -93,13 +90,11 @@ public class EventMapper {
         eventFullDto.setState(event.getState());
         eventFullDto.setTitle(event.getTitle());
         eventFullDto.setViews(views);
-
         return eventFullDto;
     }
 
     public static EventFullDtoWithComments toFullDtoWithComments(Event event, long views, List<CommentDto> comments) {
         EventFullDtoWithComments eventFullDto = new EventFullDtoWithComments();
-
         eventFullDto.setId(event.getId());
         eventFullDto.setAnnotation(event.getAnnotation());
         eventFullDto.setCategory(CategoryMapper.toDto(event.getCategory()));
@@ -117,7 +112,7 @@ public class EventMapper {
         eventFullDto.setTitle(event.getTitle());
         eventFullDto.setViews(views);
         eventFullDto.setComments(comments);
-
         return eventFullDto;
     }
+
 }
