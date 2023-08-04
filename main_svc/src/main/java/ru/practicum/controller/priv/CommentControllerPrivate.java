@@ -19,13 +19,6 @@ import javax.validation.constraints.Positive;
 public class CommentControllerPrivate {
     private final CommentService commentService;
 
-    /**
-     * Создание комментария к событию
-     *
-     * @param userId     - id автора комментария
-     * @param newComment - DTO комментария
-     * @return - DTO созданного комментария
-     */
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED) //201
     public CommentDto postComment(@PathVariable(name = "userId") @Positive int userId,
@@ -35,14 +28,6 @@ public class CommentControllerPrivate {
         return commentDto;
     }
 
-    /**
-     * Изменение комментария
-     *
-     * @param userId         - автор комментария
-     * @param commentId      - id комментария
-     * @param updatedComment - DTO Комментария с обновленными даннами
-     * @return - DTO Обновленного комментария
-     */
     @PatchMapping("/{commentId}")
     @ResponseStatus(HttpStatus.OK) //200
     public CommentDto updateComment(@PathVariable(name = "userId") @Positive int userId,
@@ -53,12 +38,6 @@ public class CommentControllerPrivate {
         return commentDto;
     }
 
-    /**
-     * Удаление комментария к событию
-     *
-     * @param userId    - автор комментария
-     * @param commentId - id комментария
-     */
     @DeleteMapping("/{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT) //204
     public void deleteComment(@PathVariable(name = "userId") @Positive int userId,

@@ -25,14 +25,6 @@ public class CategoryControllerPublic {
         this.categoryService = categoryService;
     }
 
-
-    /**
-     * Получение списка категорий с учетом пагинации
-     *
-     * @param from - параметр пагинации - с какого элемента выводить
-     * @param size - параметр пагинации - сколько эл-ов выводить
-     * @return - список DTO категорий
-     */
     @GetMapping()
     @ResponseStatus(HttpStatus.OK) //200
     public List<CategoryDto> getCategories(@RequestParam(name = "from", defaultValue = "0") @PositiveOrZero int from,
@@ -42,9 +34,6 @@ public class CategoryControllerPublic {
         return categoryDtos;
     }
 
-    /**
-     * получение категории событий по ее id
-     */
     @GetMapping("/{categoryId}")
     @ResponseStatus(HttpStatus.OK) //200
     public CategoryDto getCategory(@PathVariable int categoryId) {

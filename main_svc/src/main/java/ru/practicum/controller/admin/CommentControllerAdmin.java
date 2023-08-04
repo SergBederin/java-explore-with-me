@@ -24,11 +24,6 @@ import javax.validation.constraints.Positive;
 public class CommentControllerAdmin {
     private final CommentService commentService;
 
-    /**
-     * Удаление комментария к событию
-     *
-     * @param commentId - id комментария
-     */
     @DeleteMapping("/{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT) //204
     public void deleteComment(@PathVariable(name = "commentId") @Positive int commentId) {

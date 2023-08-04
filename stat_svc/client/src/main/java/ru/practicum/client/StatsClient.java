@@ -19,14 +19,11 @@ import java.util.stream.Collectors;
 
 public class StatsClient {
     private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-    private static final RestTemplate rest; //HTTP-клиент
+    private static final RestTemplate rest;
 
     static {
         RestTemplateBuilder builder = new RestTemplateBuilder();
-//        String serverUrl = "http://localhost:9090";
         String serverUrl = "http://ewm-stat-server:9090";
-
         rest = builder
                 .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))
                 .build();
@@ -59,36 +56,28 @@ public class StatsClient {
         return responseEntity;
     }
 
-    /**
-     * Получение данных о просмторах id
-     *
-     * @param eventsId - списоок id сбытий
-     * @return - <id события, количество просмотров>
-     */
     public static Map<Integer, Long> getMapIdViews(Collection<Integer> eventsId) {
         if (eventsId == null || eventsId.isEmpty()) {
             return new HashMap<>();
         }
-        /*составляем список URI событий из подборки*/
         List<String> eventUris = eventsId.stream()
                 .map(i -> "/events/" + i)
-                .collect(Collectors.toList()); //преобразовали список событий в список URI
+                .collect(Collectors.toList());
 
-        String[] uriArray = new String[eventUris.size()]; //создали массив строк
-        eventUris.toArray(uriArray); //заполнили массив строками из списка URI
+        String[] uriArray = new String[eventUris.size()];
+        eventUris.toArray(uriArray);
 
-        /*запрашиваем у клиента статистики данные по нужным URI*/
         List<EndpointStats> endpointStatsList = getStats(LocalDateTime.of(1970, 01, 01, 01, 01), LocalDateTime.now(), uriArray, true);
 
-        if (endpointStatsList == null || endpointStatsList.isEmpty()) { //если нет статистики по эндпоинтам, возвращаем мапу с нулевыми просмотрами
+        if (endpointStatsList == null || endpointStatsList.isEmpty()) {
             return eventsId.stream()
                     .collect(Collectors.toMap(e -> e, e -> 0L));
         }
-        /*превращаем список EndpointStats в мапу <id события, кол-во просмотров>*/
+
         Map<Integer, Long> idViewsMap = endpointStatsList.stream()
                 .collect(Collectors.toMap(e -> {
-                            String[] splitUri = e.getUri().split("/"); //делим URI /events/1
-                            return Integer.valueOf(splitUri[splitUri.length - 1]); //берем последний элемент разбитой строки - это id
+                            String[] splitUri = e.getUri().split("/");
+                            return Integer.valueOf(splitUri[splitUri.length - 1]);
                         },
                         EndpointStats::getHits));
         return idViewsMap;

@@ -26,12 +26,6 @@ public class UserControllerAdmin {
         this.userService = userService;
     }
 
-    /**
-     * Создание пользователя
-     *
-     * @param newUserRequest - DTO нового пользователя
-     * @return - DTO созданного пользователя
-     */
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED) //201
     public UserDto postUser(@Valid @RequestBody NewUserRequest newUserRequest) {
@@ -41,14 +35,6 @@ public class UserControllerAdmin {
         return userDto;
     }
 
-    /**
-     * Получение списка пользователей по списку id или всех пользователей постранично
-     *
-     * @param ids  - список id. Если список не передается, то учитываются параметры пагинации
-     * @param from - параметр пагинации - с какого элемента выводить
-     * @param size - параметр пагинации - сколько эл-ов выводить
-     * @return - список DTO пользователей
-     */
     @GetMapping
     public List<UserDto> getAllUsers(@RequestParam(name = "ids", required = false) List<Integer> ids,
                                      @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
@@ -57,9 +43,6 @@ public class UserControllerAdmin {
         return userService.getUsers(ids, from, size);
     }
 
-    /**
-     * @param userId
-     */
     @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT) //204
     public void deleteUser(@PathVariable(name = "userId") int userId) {

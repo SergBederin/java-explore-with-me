@@ -17,7 +17,6 @@ public class Event {
     private int id;
     @Column(name = "annotation")
     private String annotation;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category")
     private Category category;

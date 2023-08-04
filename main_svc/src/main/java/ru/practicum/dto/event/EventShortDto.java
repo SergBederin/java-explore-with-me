@@ -8,25 +8,22 @@ import ru.practicum.dto.user.UserShortDto;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-/**
- * DTO события с краткой информацией о нём
- */
 @Getter
 @Setter
 public class EventShortDto {
-    private int id; //id события
+    private int id;
     @NotBlank
-    private String annotation; //Краткое описание
+    private String annotation;
     @NotNull
-    private CategoryDto category; //категория
-    private int confirmedRequests; //Количество одобренных заявок на участие в данном событии
+    private CategoryDto category;
+    private int confirmedRequests;
     @NotBlank
-    private String eventDate;//Дата и время на которые намечено событие yyyy-MM-dd HH:mm:ss
+    private String eventDate;
     @NotNull
-    private UserShortDto initiator; //пользователь, создавший событие
+    private UserShortDto initiator;
     @NotNull
-    private boolean paid; //Нужно ли оплачивать участие
+    private boolean paid;
     @NotBlank
-    private String title; //Заголовок
-    private long views; //кол-во просмотров собтытия
+    private String title;
+    private long views;
 }

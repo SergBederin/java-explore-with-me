@@ -27,12 +27,6 @@ import javax.validation.constraints.Positive;
 public class CommentControllerPublic {
     private final CommentService commentService;
 
-    /**
-     * Получение комментария по id
-     *
-     * @param commentId - id
-     * @return - DTO Комментария
-     */
     @GetMapping("/{commentId}")
     @ResponseStatus(HttpStatus.OK) //200
     public CommentDto getComment(@PathVariable(name = "commentId") @Positive int commentId) {

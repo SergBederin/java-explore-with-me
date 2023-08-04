@@ -10,36 +10,33 @@ import ru.practicum.model.Location;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-/**
- * DTO события с полной информацией о нём
- */
 @Getter
 @Setter
 public class EventFullDto {
-    private int id; //id события
+    private int id;
     @NotBlank
-    private String annotation; //Краткое описание
+    private String annotation;
     @NotNull
-    private CategoryDto category; //категория
-    private int confirmedRequests; //Количество одобренных заявок на участие в данном событии
+    private CategoryDto category;
+    private int confirmedRequests;
     @NotBlank
-    private String createdOn; //Дата и время создания события yyyy-MM-dd HH:mm:ss
+    private String createdOn;
     @NotBlank
-    private String description;   //Полное описание события
+    private String description;
     @NotBlank
-    private String eventDate;//Дата и время на которые намечено событие yyyy-MM-dd HH:mm:ss
+    private String eventDate;
     @NotNull
-    private UserShortDto initiator; //пользователь, создавший событие
+    private UserShortDto initiator;
     @NotNull
-    private Location location; //место проведения события
+    private Location location;
     @NotNull
-    private boolean paid; //Нужно ли оплачивать участие
-    private int participantLimit = 0; //Ограничение на количество участников. Значение 0 - означает отсутствие ограничения
+    private boolean paid;
+    private int participantLimit = 0;
     @NotBlank
-    private String publishedOn; //Дата и время публикации события yyyy-MM-dd HH:mm:ss
-    private boolean requestModeration = false; //нужна ли пре-модерация заявок на участие
-    private EventState state = EventState.PENDING;//состояние события
+    private String publishedOn;
+    private boolean requestModeration = false;
+    private EventState state = EventState.PENDING;
     @NotBlank
-    private String title; //Заголовок
-    private long views; //кол-во просмотров собтытия
+    private String title;
+    private long views;
 }

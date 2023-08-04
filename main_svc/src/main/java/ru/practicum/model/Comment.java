@@ -15,17 +15,17 @@ import java.time.LocalDateTime;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id; //id комментария
+    private int id;
     @Column(name = "text")
-    private String text; //текст комментария
+    private String text;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")
-    private Event event; //событие, к которому относится комментарий
+    private Event event;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
-    private User author; //автор комментария
+    private User author;
     @Column(name = "created")
-    private LocalDateTime created; //время создания комментария
+    private LocalDateTime created;
     @Column(name = "updated")
-    private LocalDateTime updated; //время изменения комментария
+    private LocalDateTime updated;
 }

@@ -4,17 +4,8 @@ import ru.practicum.model.Comment;
 import ru.practicum.model.Event;
 import ru.practicum.model.User;
 
-/**
- * Класс, содержащий статические методы для преобразования объекта Compilation в его DTO и обратно
- */
 public class CommentMapper {
 
-    /**
-     * Преобразование DTO CommentDto в объект Comment
-     *
-     * @param commentDto - DTO
-     * @return - объект
-     */
     public static Comment toComment(CommentDto commentDto, User author, Event event) {
         Comment comment = new Comment();
         comment.setText(commentDto.getText());
@@ -27,12 +18,6 @@ public class CommentMapper {
         return comment;
     }
 
-    /**
-     * Преобразование объекта Comment в DTO CommentDto
-     *
-     * @param comment - объект
-     * @return - CommentDto
-     */
     public static CommentDto toDto(Comment comment) {
         CommentDto commentDto = new CommentDto();
 
