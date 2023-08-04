@@ -28,7 +28,7 @@ public class CommentControllerPublic {
     private final CommentService commentService;
 
     @GetMapping("/{commentId}")
-    @ResponseStatus(HttpStatus.OK) //200
+    @ResponseStatus(HttpStatus.OK)
     public CommentDto getComment(@PathVariable(name = "commentId") @Positive int commentId) {
         CommentDto commentDto = commentService.getComment(commentId);
         log.info("Получен комментарий с id={}", commentId);
