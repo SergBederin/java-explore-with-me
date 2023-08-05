@@ -1,5 +1,6 @@
 package ru.practicum.controller.priv;
 
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,6 @@ public class ParticipationRequestControllerPrivate {
 
     private final ParticipationService participationService;
     private final EventService eventService;
-
 
     @Autowired
     public ParticipationRequestControllerPrivate(ParticipationService participationService, EventService eventService) {
@@ -56,4 +56,5 @@ public class ParticipationRequestControllerPrivate {
         log.info("Отмена заявки Id={} от пользователя с userid={}", requestId, userId);
         return participationRequestDto;
     }
+
 }

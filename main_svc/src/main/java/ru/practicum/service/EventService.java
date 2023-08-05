@@ -63,6 +63,7 @@ public class EventService {
 
         Event event = EventMapper.toEvent(newEventDto, category, user);
         Event savedEvent = eventJpaRepository.save(event);
+
         return EventMapper.toFullDto(savedEvent, 0);
     }
 
@@ -106,12 +107,12 @@ public class EventService {
         List<Comment> comments = commentJpaRepository.findAllByEventId(eventId);
         List<CommentDto> commentDtos = comments.stream()
                 .map(CommentMapper::toDto)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()); //преобразовали в DTO
         return EventMapper.toFullDtoWithComments(event, idViewsMap.getOrDefault(event.getId(), 0L), commentDtos);
     }
 
     public EventFullDto getEventById(int eventId) {
-        /*получаем событие и кол-во его просмотров*/
+
         Event event = eventJpaRepository.findById(eventId)
                 .orElseThrow(() -> new ElementNotFoundException("События с id=" + eventId + " не найдено"));
 
@@ -213,6 +214,7 @@ public class EventService {
 
         eventJpaRepository.save(event);
         Map<Integer, Long> idViewsMap = StatsClient.getMapIdViews(List.of(event.getId()));
+
         Event updatedEvent = eventJpaRepository.findById(event.getId())
                 .orElseThrow(() -> new ElementNotFoundException("Событие с id=" + event.getId() + " не найден"));
 
@@ -454,6 +456,7 @@ public class EventService {
         typedQuery.setMaxResults(size);
         resultEvents = typedQuery.getResultList();
 
+
         EndpointHitDto endpointHitDto = new EndpointHitDto();
         endpointHitDto.setApp("ewm-main-event-service");
         endpointHitDto.setIp(request.getRemoteAddr());
@@ -463,6 +466,7 @@ public class EventService {
         StatsClient.postHit(endpointHitDto);
 
         Map<Integer, Long> idViewsMap = StatsClient.getMapIdViews(resultEvents.stream().map(Event::getId).collect(Collectors.toList()));
+
         Comparator<EventShortDto> comparator;
         if (sort != null && sort.equals("EVENT_DATE")) {
             comparator = Comparator.comparing(e -> LocalDateTime.parse(e.getEventDate(), TIME_FORMAT));

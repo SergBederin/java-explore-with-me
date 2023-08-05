@@ -26,6 +26,7 @@ public class CategoryService {
 
     @Transactional
     public CategoryDto create(NewCategoryDto newCategoryDto) {
+        /*проверка параметров*/
         String name = newCategoryDto.getName();
         if (categoryJpaRepository.findByName(name) != null) {
             throw new AlreadyExistException("Категория с именем " + name + " уже существует");
@@ -64,6 +65,7 @@ public class CategoryService {
 
     public List<CategoryDto> getAllCategories(int from, int size) {
         PageRequest page = PageRequest.of(from / size, size, Sort.by("id").ascending());
+
         List<Category> categories = categoryJpaRepository.findAll(page).getContent();
 
         return categories.stream()
@@ -72,6 +74,7 @@ public class CategoryService {
     }
 
     public CategoryDto getCategoryById(int categoryId) {
+
         if (categoryId <= 0) {
             throw new BadParameterException("Id не может быть меньше 1");
         }
@@ -81,4 +84,5 @@ public class CategoryService {
 
         return CategoryMapper.toDto(category);
     }
+
 }

@@ -109,7 +109,6 @@ public class ParticipationService {
         Map<Integer, User> users = userService.getAllUsers(userIds).stream()
                 .map(UserMapper::toUser)
                 .collect(Collectors.toMap(User::getId, u -> u));
-
         Map<Integer, ParticipationRequestDto> prDtoMap = prDtoList.stream()
                 .collect(Collectors.toMap(ParticipationRequestDto::getId, e -> e));
         Map<Integer, User> requestUserMap = prDtoList.stream()

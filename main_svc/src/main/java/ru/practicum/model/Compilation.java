@@ -15,10 +15,13 @@ public class Compilation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     @Column(name = "pinned")
     private boolean pinned;
+
     @Column(name = "title")
     private String title;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "event_compilation",
