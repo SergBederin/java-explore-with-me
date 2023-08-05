@@ -24,17 +24,16 @@ public class CategoryService {
 
     private final CategoryJpaRepository categoryJpaRepository;
 
+    @Transactional
     public CategoryDto create(NewCategoryDto newCategoryDto) {
-        /*проверка параметров*/
         String name = newCategoryDto.getName();
         if (categoryJpaRepository.findByName(name) != null) {
             throw new AlreadyExistException("Категория с именем " + name + " уже существует");
         }
 
         Category category = categoryJpaRepository.save(CategoryMapper.toCategory(newCategoryDto));
-        return CategoryMapper.toDto(category); //вернули DTO категории
+        return CategoryMapper.toDto(category);
     }
-
 
     public void deleteById(int catId) {
         categoryJpaRepository.findById(catId)
@@ -42,7 +41,7 @@ public class CategoryService {
         try {
             categoryJpaRepository.deleteById(catId);
         } catch (RuntimeException ex) {
-            throw new DataConflictException("Невозможно удалить категорию. Возможно, существуют связанные события");
+            throw new DataConflictException("Не удалось удалить категорию. Возможно, существуют связанные события");
         }
     }
 
@@ -65,7 +64,6 @@ public class CategoryService {
 
     public List<CategoryDto> getAllCategories(int from, int size) {
         PageRequest page = PageRequest.of(from / size, size, Sort.by("id").ascending());
-
         List<Category> categories = categoryJpaRepository.findAll(page).getContent();
 
         return categories.stream()
@@ -74,7 +72,6 @@ public class CategoryService {
     }
 
     public CategoryDto getCategoryById(int categoryId) {
-
         if (categoryId <= 0) {
             throw new BadParameterException("Id не может быть меньше 1");
         }
@@ -84,5 +81,4 @@ public class CategoryService {
 
         return CategoryMapper.toDto(category);
     }
-
 }

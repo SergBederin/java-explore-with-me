@@ -25,7 +25,6 @@ public class CompilationMapper {
         Map<Integer, Long> idViewsMap = StatsClient.getMapIdViews(events.stream()
                 .map(Event::getId)
                 .collect(Collectors.toList()));
-
         compilationDto.setEvents(compilation.getEvents().stream()
                 .map(e -> EventMapper.toShortDto(e, idViewsMap.get(e.getId())))
                 .collect(Collectors.toSet()));

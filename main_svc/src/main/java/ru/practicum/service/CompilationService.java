@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CompilationService {
     private final CompilationJpaRepository compilationJpaRepository;
     private final EventService eventService;
@@ -45,7 +46,7 @@ public class CompilationService {
     }
 
     public CompilationDto getCompById(int compId) {
-        /*проверка параметров запроса*/
+
         if (compId <= 0) {
             throw new BadParameterException("Id не может быть меньше 1");
         }
@@ -91,6 +92,7 @@ public class CompilationService {
         return CompilationMapper.toDto(compilation);
     }
 
+    @Transactional
     public void deleteById(int compId) {
         compilationJpaRepository.findById(compId)
                 .orElseThrow(() -> new ElementNotFoundException("Подборка с id= " + compId + " не найден"));

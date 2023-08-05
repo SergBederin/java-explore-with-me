@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ParticipationService {
 
     private final ParticipationJpaRepository participationJpaRepository;
@@ -108,6 +109,7 @@ public class ParticipationService {
         Map<Integer, User> users = userService.getAllUsers(userIds).stream()
                 .map(UserMapper::toUser)
                 .collect(Collectors.toMap(User::getId, u -> u));
+
         Map<Integer, ParticipationRequestDto> prDtoMap = prDtoList.stream()
                 .collect(Collectors.toMap(ParticipationRequestDto::getId, e -> e));
         Map<Integer, User> requestUserMap = prDtoList.stream()
@@ -120,7 +122,6 @@ public class ParticipationService {
         participationJpaRepository.saveAll(prList);
     }
 
-    @Transactional
     public List<ParticipationRequestDto> getRequestsByUser(int userId) {
 
         UserDto userDto = userService.getUserById(userId);
