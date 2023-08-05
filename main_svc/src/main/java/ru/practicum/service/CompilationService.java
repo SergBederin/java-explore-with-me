@@ -37,7 +37,6 @@ public class CompilationService {
 
     public List<CompilationDto> getAllComps(boolean pinned, int from, int size) {
         PageRequest page = PageRequest.of(from / size, size, Sort.by("id").ascending());
-
         List<Compilation> compilations = compilationJpaRepository.findByPinned(pinned, page);
 
         return compilations.stream()

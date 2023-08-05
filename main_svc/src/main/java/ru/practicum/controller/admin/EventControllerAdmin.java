@@ -51,4 +51,5 @@ public class EventControllerAdmin {
         log.info("Выполнен поиск событий через API администратора");
         return events;
     }
+
 }

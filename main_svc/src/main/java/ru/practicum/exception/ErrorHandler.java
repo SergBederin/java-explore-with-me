@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 @Slf4j
 public class ErrorHandler {
+
     private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @ExceptionHandler({PaginationParametersException.class, BadParameterException.class})
@@ -85,6 +86,7 @@ public class ErrorHandler {
         log.debug(ex.getClass().getSimpleName() + ": " + ex.getMessage());
         return new ResponseEntity<>(apiError, HttpStatus.CONFLICT); //409
     }
+
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ApiError> handleAllAnother(RuntimeException ex) {

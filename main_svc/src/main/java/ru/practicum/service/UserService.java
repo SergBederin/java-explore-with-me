@@ -33,7 +33,6 @@ public class UserService {
         if (testUser != null) {
             throw new AlreadyExistException("Пользователь с email=" + newEmail + " уже существует");
         }
-
         User user = userJpaRepository.save(UserMapper.toUser(newUserRequest));
         return UserMapper.toDto(user);
     }

@@ -47,7 +47,6 @@ public class EventControllerPrivate {
         return eventShortDtos;
     }
 
-
     @GetMapping("/{eventId}")
     @ResponseStatus(HttpStatus.OK) //200
     public EventFullDtoWithComments getEventByUserAndId(@PathVariable(name = "userId") @Positive int userId,
