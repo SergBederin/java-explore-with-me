@@ -9,6 +9,8 @@ import ru.practicum.client.StatsClient;
 import ru.practicum.dto.EndpointHitDto;
 import ru.practicum.dto.categoty.CategoryDto;
 import ru.practicum.dto.categoty.CategoryMapper;
+import ru.practicum.dto.comment.CommentDto;
+import ru.practicum.dto.comment.CommentMapper;
 import ru.practicum.dto.event.*;
 import ru.practicum.dto.participationRequest.EventRequestStatusUpdateRequest;
 import ru.practicum.dto.participationRequest.EventRequestStatusUpdateResult;
@@ -20,6 +22,7 @@ import ru.practicum.exception.CreateConditionException;
 import ru.practicum.exception.DataConflictException;
 import ru.practicum.exception.ElementNotFoundException;
 import ru.practicum.model.*;
+import ru.practicum.repository.CommentJpaRepository;
 import ru.practicum.repository.EventJpaRepository;
 
 import javax.persistence.EntityManager;
@@ -37,17 +40,19 @@ import static java.time.temporal.ChronoUnit.HOURS;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class EventService {
     private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private final EventJpaRepository eventJpaRepository;
+    private final CommentJpaRepository commentJpaRepository;
     private final CategoryService categoryService;
     private final UserService userService;
     private final ParticipationService participationService;
     private final EntityManager entityManager;
 
-
     @Transactional
     public EventFullDto createEvent(NewEventDto newEventDto, int userId) {
+
         LocalDateTime newEventDateTime = LocalDateTime.parse(newEventDto.getEventDate(), TIME_FORMAT);
         if (HOURS.between(LocalDateTime.now(), newEventDateTime) < 2) {
             throw new BadParameterException("Начало события должно быть минимум на два часа позднее текущего момента");
@@ -58,11 +63,11 @@ public class EventService {
 
         Event event = EventMapper.toEvent(newEventDto, category, user);
         Event savedEvent = eventJpaRepository.save(event);
-
         return EventMapper.toFullDto(savedEvent, 0);
     }
 
     public List<EventShortDto> getEventsByCategory(int catId) {
+
         if (catId <= 0) {
             throw new BadParameterException("Id категории должен быть >0");
         }
@@ -91,18 +96,22 @@ public class EventService {
                 .collect(Collectors.toList());
     }
 
-    public EventFullDto getByUserAndId(int userId, int eventId) {
+    public EventFullDtoWithComments getByUserAndId(int userId, int eventId) {
 
         Event event = eventJpaRepository.getByIdAndUserId(eventId, userId);
         if (event == null) {
             throw new ElementNotFoundException("События с id=" + eventId + " и initiatorId=" + userId + " не найдено");
         }
         Map<Integer, Long> idViewsMap = StatsClient.getMapIdViews(List.of(event.getId()));
-
-        return EventMapper.toFullDto(event, idViewsMap.getOrDefault(event.getId(), 0L));
+        List<Comment> comments = commentJpaRepository.findAllByEventId(eventId);
+        List<CommentDto> commentDtos = comments.stream()
+                .map(CommentMapper::toDto)
+                .collect(Collectors.toList());
+        return EventMapper.toFullDtoWithComments(event, idViewsMap.getOrDefault(event.getId(), 0L), commentDtos);
     }
 
     public EventFullDto getEventById(int eventId) {
+        /*получаем событие и кол-во его просмотров*/
         Event event = eventJpaRepository.findById(eventId)
                 .orElseThrow(() -> new ElementNotFoundException("События с id=" + eventId + " не найдено"));
 
@@ -110,8 +119,21 @@ public class EventService {
         return EventMapper.toFullDto(event, idViewsMap.getOrDefault(event.getId(), 0L));
     }
 
-    public EventFullDto getEventByIdWithStats(int eventId, HttpServletRequest request) {
-        EventFullDto eventDto = this.getEventById(eventId);
+    public EventFullDtoWithComments getEventWithCommentsById(int eventId) {
+
+        Event event = eventJpaRepository.findById(eventId)
+                .orElseThrow(() -> new ElementNotFoundException("События с id=" + eventId + " не найдено"));
+
+        Map<Integer, Long> idViewsMap = StatsClient.getMapIdViews(List.of(event.getId()));
+        List<Comment> comments = commentJpaRepository.findAllByEventId(eventId);
+        List<CommentDto> commentDtos = comments.stream()
+                .map(CommentMapper::toDto)
+                .collect(Collectors.toList());
+        return EventMapper.toFullDtoWithComments(event, idViewsMap.getOrDefault(event.getId(), 0L), commentDtos);
+    }
+
+    public EventFullDtoWithComments getEventByIdWithStats(int eventId, HttpServletRequest request) {
+        EventFullDtoWithComments eventDto = this.getEventWithCommentsById(eventId);
         if (eventDto.getState() != EventState.PUBLISHED) {
             throw new ElementNotFoundException("Событие с id=" + eventId + " не опубликовано");
         }
@@ -129,6 +151,7 @@ public class EventService {
 
     @Transactional
     public EventFullDto patchEvent(int userId, int eventId, UpdateEventUserRequest updateRequest) {
+
         Event event = eventJpaRepository.getByIdAndUserId(eventId, userId);
         if (event == null) {
             throw new ElementNotFoundException("События с id=" + eventId + " и initiatorId=" + userId + " не найдено");
@@ -190,7 +213,6 @@ public class EventService {
 
         eventJpaRepository.save(event);
         Map<Integer, Long> idViewsMap = StatsClient.getMapIdViews(List.of(event.getId()));
-
         Event updatedEvent = eventJpaRepository.findById(event.getId())
                 .orElseThrow(() -> new ElementNotFoundException("Событие с id=" + event.getId() + " не найден"));
 
@@ -199,6 +221,7 @@ public class EventService {
 
     @Transactional
     public EventFullDto patchAdminEvent(int eventId, UpdateEventAdminRequest adminRequest) {
+
         Event event = eventJpaRepository.findById(eventId)
                 .orElseThrow(() -> new ElementNotFoundException("События с id=" + eventId + " не найдено"));
 
@@ -273,6 +296,7 @@ public class EventService {
 
         Event updatedEvent = eventJpaRepository.findById(event.getId())
                 .orElseThrow(() -> new ElementNotFoundException("Событие с id=" + event.getId() + " не найден"));
+
         return EventMapper.toFullDto(updatedEvent, idViewsMap.getOrDefault(event.getId(), 0L));
     }
 
@@ -286,7 +310,6 @@ public class EventService {
 
         return participationService.getAllRequestsEventId(event.getId());
     }
-
 
     @Transactional
     public EventRequestStatusUpdateResult updateStatus(int userId, int eventId, EventRequestStatusUpdateRequest updateRequest) {
@@ -310,7 +333,6 @@ public class EventService {
         }
     }
 
-    @Transactional
     public List<EventFullDto> searchEvents(List<Integer> users, List<String> states, List<Integer> categories, LocalDateTime rangeStart, LocalDateTime rangeEnd, int from, int size) {
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -325,7 +347,7 @@ public class EventService {
                     = criteriaBuilder.between(eventRoot.get("eventDate").as(LocalDateTime.class), rangeStart, rangeEnd);
         }
         if (users != null && !users.isEmpty()) {
-            /*строим предикат по инициатору событий*/
+
             Predicate predicateForUsersId
                     = eventRoot.get("initiator").get("id").in(users);
             if (complexPredicate == null) {
@@ -335,7 +357,7 @@ public class EventService {
             }
         }
         if (categories != null && !categories.isEmpty()) {
-            /*строим предикат по категории событий*/
+
             Predicate predicateForCategoryId
                     = eventRoot.get("category").get("id").in(categories);
             if (complexPredicate == null) {
@@ -362,12 +384,12 @@ public class EventService {
         resultEvents = typedQuery.getResultList();
 
         Map<Integer, Long> idViewsMap = StatsClient.getMapIdViews(resultEvents.stream().map(Event::getId).collect(Collectors.toList()));
+
         return resultEvents.stream()
                 .map(e -> EventMapper.toFullDto(e, idViewsMap.getOrDefault(e.getId(), 0L)))
                 .collect(Collectors.toList());
     }
 
-    @Transactional
     public List<EventShortDto> searchEventsWithStats(String text, List<Integer> categories, Boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd, Boolean onlyAvailable, String sort, int from, int size, HttpServletRequest request) {
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -441,7 +463,6 @@ public class EventService {
         StatsClient.postHit(endpointHitDto);
 
         Map<Integer, Long> idViewsMap = StatsClient.getMapIdViews(resultEvents.stream().map(Event::getId).collect(Collectors.toList()));
-
         Comparator<EventShortDto> comparator;
         if (sort != null && sort.equals("EVENT_DATE")) {
             comparator = Comparator.comparing(e -> LocalDateTime.parse(e.getEventDate(), TIME_FORMAT));
@@ -464,6 +485,7 @@ public class EventService {
             return new HashSet<>();
         }
         Map<Integer, Long> idViewsMap = StatsClient.getMapIdViews(eventList.stream().map(Event::getId).collect(Collectors.toList()));
+
         return eventList.stream()
                 .map(e -> EventMapper.toFullDto(e, idViewsMap.getOrDefault(e.getId(), 0L)))
                 .collect(Collectors.toSet());

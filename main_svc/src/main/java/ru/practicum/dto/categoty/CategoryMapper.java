@@ -1,6 +1,5 @@
 package ru.practicum.dto.categoty;
 
-import ru.practicum.dto.categoty.CategoryDto;
 import ru.practicum.model.Category;
 
 public class CategoryMapper {

@@ -1,6 +1,5 @@
 package ru.practicum.dto.participationRequest;
 
-
 import lombok.Getter;
 import lombok.Setter;
 

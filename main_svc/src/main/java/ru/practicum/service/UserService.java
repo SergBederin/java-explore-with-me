@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserService {
     private final UserJpaRepository userJpaRepository;
 
@@ -66,6 +67,7 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void deleteById(int userId) {
         userJpaRepository.findById(userId)
                 .orElseThrow(() -> new ElementNotFoundException("Пользователь с id= " + userId + " не найден"));

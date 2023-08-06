@@ -19,13 +19,11 @@ import java.util.stream.Collectors;
 
 public class StatsClient {
     private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
     private static final RestTemplate rest;
 
     static {
         RestTemplateBuilder builder = new RestTemplateBuilder();
         String serverUrl = "http://ewm-stat-server:9090";
-
         rest = builder
                 .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))
                 .build();
@@ -62,13 +60,13 @@ public class StatsClient {
         if (eventsId == null || eventsId.isEmpty()) {
             return new HashMap<>();
         }
-
         List<String> eventUris = eventsId.stream()
                 .map(i -> "/events/" + i)
                 .collect(Collectors.toList());
 
         String[] uriArray = new String[eventUris.size()];
         eventUris.toArray(uriArray);
+
         List<EndpointStats> endpointStatsList = getStats(LocalDateTime.of(1970, 01, 01, 01, 01), LocalDateTime.now(), uriArray, true);
 
         if (endpointStatsList == null || endpointStatsList.isEmpty()) {
@@ -79,7 +77,6 @@ public class StatsClient {
         Map<Integer, Long> idViewsMap = endpointStatsList.stream()
                 .collect(Collectors.toMap(e -> {
                             String[] splitUri = e.getUri().split("/");
-                            Arrays.asList(splitUri).forEach(s -> System.out.println("idViewsMap + elements+///+ " + s));
                             return Integer.valueOf(splitUri[splitUri.length - 1]);
                         },
                         EndpointStats::getHits));
